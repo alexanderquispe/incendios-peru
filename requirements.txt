@@ -1,0 +1,17 @@
+pandas==3.0.6
+numpy==2.5.4
+geopandas==1.2.0
+shapely==2.2.0
+pyproj==3.8.0
+pyogrio==0.13.0
+rasterio==1.5.2
+requests==2.34.2
+pyarrow==26.0.0
+scikit-learn==1.9.1
+scipy==1.18.1
+pillow==13.0.0
+mercantile==1.2.1
+pystac-client==0.9.0
+planetary-computer==1.0.0
+# solo para probar el tablero sin navegador
+playwright==1.64.0
