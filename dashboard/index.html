@@ -353,7 +353,8 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .leyenda-3d span { display: flex; gap: 7px; align-items: center; }
 .leyenda-3d .punto { outline: 1px solid #ffffff; outline-offset: 0; }
 .trazo { display: inline-block; width: 16px; height: 0; border-top: 2.5px solid var(--fire-24); flex: none; }
-.trazo.previo { border-top: 1.5px solid #ffffff; box-shadow: 0 0 0 1px var(--ink-3); }
+.trazo.quemado { border-top: 2px solid #ffffff; box-shadow: 0 0 0 1.5px rgba(24, 16, 12, 0.65); }
+.trazo.viirs { border-top: 2px dashed var(--fire-24); }
 .graficos-evento { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); border-top: 1px solid var(--line); grid-column: 1 / -1; }
 .graficos-evento figure { margin: 0; padding: 14px 16px 10px; border-right: 1px solid var(--line); min-width: 0; position: relative; }
 .graficos-evento figure:last-child { border-right: 0; }
@@ -553,11 +554,11 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
         <div class="dia-box" id="dato-dia"></div>
         <div class="severidad" id="ficha-sev"></div>
         <div class="leyenda-3d" aria-label="Leyenda de la vista 3D">
+          <span id="ley-quemado"><i class="trazo quemado"></i>Área quemada (Sentinel-2)</span>
+          <span><i class="trazo viirs"></i>Zona con focos hasta ese día</span>
           <span><i class="punto" style="background:var(--fire-24)"></i>Focos del día elegido</span>
           <span><i class="punto" style="background:var(--fire-7)"></i>Focos de 1 y 2 días antes</span>
           <span><i class="punto" style="background:var(--fire-old)"></i>Focos anteriores</span>
-          <span><i class="trazo"></i>Borde del fuego ese día</span>
-          <span><i class="trazo previo"></i>Bordes de días previos</span>
         </div>
         <p class="nota-chica" id="ficha-img"></p>
       </div>
@@ -1148,6 +1149,7 @@ async function cargarEvento3D(id) {
   const rango = d.dem_rango[1] - d.dem_rango[0];
   E3.exag = rango < 250 ? 4 : rango < 600 ? 2 : 1.3;
   E3.malla = construirMalla(E3.dem, d.bounds, E3.exag);
+  E3.quemado = d.severidad && d.severidad.perimetro ? anillos3D(d.severidad.perimetro, 25) : [];
   if (!d.texturas.includes(E3.textura)) E3.textura = d.texturas.includes("natural") ? "natural" : "relieve";
   pintarBotonesTextura();
   $("#c-sev").disabled = !d.severidad; $("#c-sev").parentElement.style.opacity = d.severidad ? 1 : 0.5;
@@ -1185,7 +1187,8 @@ function elevEn(lon, lat) {
 function construirMalla(dem, b, exag) {
   const { w, h, z } = dem, [o, s, e, n] = b;
   const lon0 = (o + e) / 2, lat0 = (s + n) / 2;
-  const mx = 111320 * Math.cos(lat0 * Math.PI / 180), my = 110540;
+  // metros por grado con la misma Tierra que deck.gl (40,030 km de circunferencia), para que la malla calce con focos y bordes
+  const mg = 40030000 / 360, mx = mg * Math.cos(lat0 * Math.PI / 180), my = mg;
   const pos = new Float32Array(w * h * 3), uv = new Float32Array(w * h * 2), nor = new Float32Array(w * h * 3);
   const dx = (e - o) / w * mx, dy = (n - s) / h * my;
   for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
@@ -1205,6 +1208,10 @@ function construirMalla(dem, b, exag) {
     idx[p++] = a; idx[p++] = c; idx[p++] = b2; idx[p++] = b2; idx[p++] = c; idx[p++] = d;
   }
   return { centro: [lon0, lat0], mesh: { attributes: { POSITION: { value: pos, size: 3 }, NORMAL: { value: nor, size: 3 }, TEXCOORD_0: { value: uv, size: 2 } }, indices: { value: idx, size: 1 }, mode: 4 } };
+}
+function anillos3D(g, dz) {
+  return (g.type === "Polygon" ? [g.coordinates] : g.coordinates)
+    .flatMap(poli => poli.map(anillo => anillo.map(([lon, lat]) => [lon, lat, elevEn(lon, lat) * E3.exag + dz])));
 }
 async function componerTextura() {
   const base = E3.imagenes[E3.textura];
@@ -1228,21 +1235,22 @@ function pintar3D() {
   const dia = E3.dia, ex = E3.exag;
   const hoy = rgb("--fire-24"), prev = rgb("--fire-7"), viejo = rgb("--fire-old");
   const focos = d.focos.filter(f => f[6] <= dia);
-  const perims = d.perimetros.features.filter(f => f.properties.dia <= dia);
-  const anillos = [];
-  for (const f of perims) {
-    const g = f.geometry, polis = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
-    for (const poli of polis) for (const anillo of poli)
-      anillos.push({ dia: f.properties.dia, path: anillo.map(([lon, lat]) => [lon, lat, elevEn(lon, lat) * ex + 30]) });
-  }
+  // zona con focos VIIRS acumulada hasta el día (punteada): no es el borde del fuego, el satélite solo pasa ~01:30 y ~13:30
+  const zona = anillos3D(d.perimetros.features.find(f => f.properties.dia === dia).geometry, 30);
   const capas = [
     new deck.SimpleMeshLayer({ id: "terreno", data: [{}], mesh: E3.malla.mesh, texture: E3.tex,
       getPosition: () => [...E3.malla.centro, 0], getColor: [255, 255, 255], sizeScale: 1,
       material: { ambient: 0.7, diffuse: 0.45, shininess: 0, specularColor: [0, 0, 0] },
       updateTriggers: { texture: E3.texVersion } }),
-    new deck.PathLayer({ id: "perimetros", data: anillos, getPath: a => a.path, widthUnits: "pixels",
-      getWidth: a => (a.dia === dia ? 2.6 : 1.2), getColor: a => (a.dia === dia ? [...hoy.slice(0, 3), 255] : [255, 255, 255, 120]),
-      updateTriggers: { getWidth: dia, getColor: [dia, hoy.join()] }, parameters: { depthTest: true } }),
+    // área quemada que muestra la imagen Sentinel-2 (línea blanca con halo oscuro)
+    new deck.PathLayer({ id: "quemado-halo", data: E3.quemado, getPath: a => a, widthUnits: "pixels", getWidth: 4.5,
+      getColor: [24, 16, 12, 150], parameters: { depthTest: true } }),
+    new deck.PathLayer({ id: "quemado", data: E3.quemado, getPath: a => a, widthUnits: "pixels", getWidth: 2,
+      getColor: [255, 255, 255, 240], parameters: { depthTest: true } }),
+    new deck.PathLayer({ id: "zona-viirs", data: zona, getPath: a => a, widthUnits: "pixels", getWidth: 2,
+      getColor: [...hoy.slice(0, 3), 255], getDashArray: [3, 2], dashJustified: true,
+      extensions: [new deck.PathStyleExtension({ dash: true })],
+      updateTriggers: { getColor: hoy.join() }, parameters: { depthTest: true } }),
     new deck.ScatterplotLayer({ id: "focos3d", data: focos, pickable: true, billboard: true,
       getPosition: f => [f[0], f[1], f[2] * ex + 45], radiusUnits: "pixels",
       getRadius: f => (f[6] === dia ? 5 : 3.2), stroked: true, lineWidthUnits: "pixels", getLineWidth: f => (f[6] === dia ? 1.5 : 0.8),
@@ -1279,7 +1287,7 @@ function pintarFicha() {
   const clave = (et, v, u, cls) => el("div", {}, el("span", { text: et }), el("b", { class: cls || null }, v, u ? el("small", { text: u }) : null));
   $("#ficha-claves").replaceChildren(
     clave("Huella VIIRS", fmt.format(e.huella_ha), "ha"),
-    clave("Área quemada, Sentinel-2", sev ? fmt.format(sev.total_ha) : "s. d.", sev ? "ha" : null),
+    clave("Área quemada, Sentinel-2", sev ? fmt.format(sev.total_ha) : "s. d.", sev ? `ha al ${fechaCorta(sev.post)}` : null),
     clave("Huella nueva en 24 h", e.huella_24h_ha > 0 ? `+${fmt.format(e.huella_24h_ha)}` : "0", "ha", e.huella_24h_ha > 0 ? "crece" : null),
     clave("Duración", fmt1.format(Math.max(e.duracion_dias, 0.1)), "días"));
   const datos = [
@@ -1303,10 +1311,17 @@ function pintarFicha() {
       el("div", { class: "barra-sev", role: "img", "aria-label": sev.clases.map(c => `${c.clase}: ${fmt.format(c.ha)} ha`).join(", ") },
         ...sev.clases.map((c, i) => el("span", { style: `width:${c.ha / total * 100}%;background:${colores[i]}`, title: `${c.clase}: ${fmt.format(c.ha)} ha` }))),
       el("div", { class: "sev-leyenda" }, ...sev.clases.map((c, i) => el("span", {}, el("i", { style: "background:" + colores[i] }), `${c.clase} ${fmt.format(c.ha)} ha`))),
-      el("span", { class: "nota-chica", text: `Sentinel-2 del ${fechaCorta(sev.pre)} frente al ${fechaCorta(sev.post)}, a ≤ 1.5 km de los focos.${sev.pct_sin_dato > 5 ? ` ${fmt.format(sev.pct_sin_dato)} % del área sin dato por nubes.` : ""}` }));
+      el("span", { class: "nota-chica", text: `Sentinel-2 del ${fechaCorta(sev.pre)} frente al ${fechaCorta(sev.post)}. ` +
+        `El ${fmt.format(sev.focos_antes_dentro_pct)} % de los focos detectados hasta esa imagen cae dentro del área quemada.` +
+        (sev.focos_despues > 0 ? ` ${fmt.format(sev.focos_despues)} focos son posteriores a la imagen: el área quemada actual puede ser mayor.` : "") +
+        (sev.pct_sin_dato > 5 ? ` ${fmt.format(sev.pct_sin_dato)} % del entorno sin dato por nubes o humo.` : "") }));
   } else {
-    $("#ficha-sev").replaceChildren(el("span", { class: "nota-chica", text: "Sin par de imágenes Sentinel-2 despejadas para estimar el área quemada." }));
+    $("#ficha-sev").replaceChildren(el("span", { class: "nota-chica", text: d.sentinel.previa_al_fuego
+      ? `La imagen Sentinel-2 despejada más reciente (${fechaCorta(d.sentinel.post)}) es anterior al primer foco: todavía no hay una imagen que muestre el área quemada.`
+      : "Sin par de imágenes Sentinel-2 despejadas para estimar el área quemada." }));
   }
+  $("#ley-quemado").hidden = !E3.quemado.length;
+  if (sev) $("#ley-quemado").replaceChildren(el("i", { class: "trazo quemado" }), `Área quemada al ${fechaCorta(sev.post)} (Sentinel-2)`);
   const s2 = d.sentinel;
   $("#ficha-img").textContent = s2.post ? `Imagen Sentinel-2 L2A del ${fechaCorta(s2.post)} (Copernicus, vía Microsoft Planetary Computer). En la vista infrarroja, la vegetación se ve verde y el área quemada, rojo oscuro. Relieve: AWS Terrain Tiles; exageración vertical ×${fmt1.format(E3.exag)}.`
     : `Sin imagen Sentinel-2 despejada posterior al inicio; se muestra el relieve. Exageración vertical ×${fmt1.format(E3.exag)}.`;

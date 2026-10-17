@@ -16,7 +16,7 @@ Sentinel-2 y límites oficiales.
 | Resumen | Titular con la conclusión del día, cifras clave con su contexto 2012–2026 (mini-barras por año), variación de focos frente a las 24 h previas, antigüedad de los datos y glosario mínimo |
 | Atención prioritaria | Tres listas para decidir: incendios que más se extienden (huella nueva en 24 h), incendios activos con más población a ≤ 5 km y áreas protegidas con más focos en 7 días |
 | Mapa | Mapa nacional con focos por antigüedad, incendios activos, áreas protegidas, escala y animación de la temporada; lista de los 25 incendios activos de mayor prioridad (0–100) con los factores que más pesan |
-| Incendio en 3D | Vista 3D de 15 incendios priorizados: relieve real, imagen Sentinel-2 (color natural e infrarrojo), perímetro acumulado por día, severidad del quemado (dNBR), brújula y gráficos de huella, intensidad (FRP) y altitud |
+| Incendio en 3D | Vista 3D de 15 incendios priorizados: relieve real, imagen Sentinel-2 (color natural e infrarrojo), borde del área quemada que muestra la imagen (línea blanca), zona con focos VIIRS por día (punteada), severidad del quemado (dNBR), brújula y gráficos de huella, intensidad (FRP) y altitud |
 | Temporada | Focos S-NPP por día frente al rango 2012–2025 y acumulado desde el 1 de julio, con títulos que dicen el hallazgo |
 | Departamentos | Focos 24 h / 7 días / temporada, tendencia de 30 días, anomalía frente a 2012–2025, incendios activos y focos en ANP; al elegir un departamento, el mapa lo encuadra |
 | Fuentes y método | Cifras del COEN, INDECI, SENAMHI, CENEPRED y MINAM/SERNANP con su fuente; cotejo de incendios reportados con las detecciones; metodología |
@@ -56,7 +56,9 @@ INPE y FIRMS se calibraron entre sí en julio–octubre de 2025: la diferencia m
 - **Fuentes estáticas**: se excluyen focos a < 500 m de detecciones FIRMS tipo volcán u otra fuente estática (2012–2025).
 - **Eventos**: componentes conexas de focos a ≤ 1 km y ≤ 48 h. Estado *Activo* (< 24 h), *En observación* (24–72 h), *Sin actividad reciente*.
 - **Huella VIIRS**: celdas de 375 m con al menos un foco. Sirve para comparar incendios; no es el área quemada oficial.
-- **Área quemada**: dNBR de Sentinel-2 (B8A/B12), pre y post, con máscara SCL y solo a ≤ 1.5 km de los focos; clases de Key y Benson (USGS).
+- **Área quemada**: dNBR de Sentinel-2 (B8A/B12), pre y post, con máscara SCL. Umbral doble sembrado con los focos: núcleo con
+  dNBR ≥ 0.27 a ≤ 750 m de un foco y crecimiento por píxeles contiguos con dNBR ≥ 0.10 y NBR posterior ≤ 0.10 (suelo carbonizado),
+  hasta 3 km. Clases de Key y Benson (USGS). No se estima si la imagen es anterior al primer foco.
 - **Prioridad (0–100)**: actividad 30, tamaño 20, intensidad 20, población a 5 km 15, área protegida 15, con escalas fijas (ver `src/05_eventos.py`).
 - **Región natural**: sierra ≥ 2,000 m; debajo, costa o selva según la vertiente.
 
@@ -98,5 +100,10 @@ en el mismo enlace.
 - Un foco de calor no es un incendio forestal: incluye quemas agrícolas y de pastos. Los conteos satelitales no se comparan
   con los conteos de emergencias de INDECI.
 - Nubes y humo ocultan el fuego; un incendio puede seguir activo sin ser visto.
+- La zona con focos VIIRS no es el borde del fuego. VIIRS solo observa en sus pases (~01:30 y ~13:30 h) con píxeles de 375 m, y entre
+  pases el frente puede quemar grandes extensiones sin ser detectado. En Alto Pichigua (Espinar, Cusco), 170 de los 178 focos son de
+  los pases de mediodía, y el área quemada en Sentinel-2 (2,511 ha) supera la huella VIIRS (1,420 ha). El borde que vale es el de Sentinel-2.
+- La imagen infrarroja muestra todas las quemas, también las anteriores al incendio; el dNBR las separa porque ya estaban quemadas
+  en la imagen previa.
 - Los datos de los últimos días pueden completarse cuando INPE y FIRMS reprocesen pases pendientes.
 - La región natural y la cobertura son aproximaciones para orientar, no clasificaciones oficiales.

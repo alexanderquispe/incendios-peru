@@ -109,7 +109,12 @@ def metodo(resumen, calib):
             "Huella VIIRS: superficie de las celdas de 375 m con al menos un foco. Sirve para comparar tamaños entre incendios, pero no es el área quemada oficial: "
             "sobrestima los incendios pequeños (cada foco cuenta 14 ha) y subestima los que quedan bajo nubes.",
             "Área quemada (Sentinel-2): diferencia del índice normalizado de quemado (dNBR, bandas B8A y B12) entre la imagen despejada más reciente antes del inicio "
-            "y la más reciente después, con máscara de nubes, sombras y agua, contando solo píxeles a 1.5 km o menos de los focos. Clases de severidad de Key y Benson (USGS).",
+            "y la más reciente después, con máscara de nubes, sombras y agua. Se parte de los píxeles con dNBR de 0.27 o más a 750 m o menos de un foco y se suman "
+            "los píxeles contiguos con dNBR de 0.10 o más y NBR posterior de 0.10 o menos (suelo carbonizado), hasta 3 km de los focos. Clases de severidad de Key y Benson (USGS). "
+            "Si la imagen es anterior al primer foco, no se estima.",
+            "En la vista 3D, la línea blanca es el borde del área quemada que muestra la imagen Sentinel-2 y la línea punteada, la zona a 250 m o menos de los focos VIIRS "
+            "acumulados hasta el día elegido. No coinciden, y es esperable: VIIRS solo observa el fuego en sus pases de alrededor de la 01:30 y las 13:30 h, con píxeles de 375 m, "
+            "y entre un pase y otro el frente puede quemar grandes extensiones de pajonal sin ser detectado.",
             "Avance máximo del frente: distancia máxima entre un foco nuevo del día y el foco previo más cercano del mismo incendio.",
         ]},
         {"titulo": "Índice de prioridad (0 a 100)", "parrafos": [

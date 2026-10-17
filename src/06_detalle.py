@@ -4,8 +4,9 @@ Para cada evento seleccionado genera:
 - terreno (PNG Terrarium) en una malla lon/lat regular, para deck.gl TerrainLayer
 - texturas: relieve sombreado y, si hay imagen sin nubes, Sentinel-2 L2A en color
   natural y en infrarrojo de onda corta (el área quemada se ve rojo oscuro)
-- severidad del quemado (dNBR, Sentinel-2 antes/después) y hectáreas por clase
-- avance diario: perímetro acumulado aproximado, área, avance máximo del frente,
+- área quemada visible en Sentinel-2 (dNBR antes/después, sembrada con los focos):
+  polígono, hectáreas por clase de severidad y qué parte de los focos cae dentro
+- avance diario: zona con focos VIIRS acumulada, área, avance máximo del frente,
   FRP y rango de altitud de los focos de cada día
 
 Salidas: dashboard/data/eventos/<id>.json y dashboard/assets/eventos/<id>_*.png|jpg
@@ -22,12 +23,15 @@ import planetary_computer
 import pystac_client
 import rasterio
 from PIL import Image
+from rasterio import features
 from rasterio.transform import from_bounds
 from rasterio.warp import Resampling, reproject
+from scipy import ndimage as ndi
 from scipy.ndimage import map_coordinates
 from scipy.spatial import cKDTree
 from shapely import affinity
-from shapely.geometry import MultiPoint, mapping
+from shapely.geometry import MultiPoint, MultiPolygon, mapping, shape
+from shapely.ops import unary_union
 
 sys.path.insert(0, str(Path(__file__).parent))
 from terreno import Mosaico, terrain_rgb_terrarium  # noqa: E402
@@ -35,6 +39,7 @@ from terreno import Mosaico, terrain_rgb_terrarium  # noqa: E402
 warnings.filterwarnings("ignore")
 RAIZ = Path(__file__).resolve().parents[1]
 PRO = RAIZ / "data" / "processed"
+CACHE_S2 = RAIZ / "data" / "interim" / "s2"   # bandas Sentinel-2 ya recortadas, para no volver a descargarlas
 OUT_DATA = RAIZ / "dashboard" / "data" / "eventos"
 OUT_IMG = RAIZ / "dashboard" / "assets" / "eventos"
 OUT_DATA.mkdir(parents=True, exist_ok=True)
@@ -43,7 +48,13 @@ OUT_IMG.mkdir(parents=True, exist_ok=True)
 R = 6371000.0
 ANCHO_DEM = 384       # columnas de la malla de terreno
 ANCHO_TEX = 1024      # columnas de las texturas
-RADIO_FOCO_M = 250    # radio con que se dibuja cada foco al armar el perímetro
+RADIO_FOCO_M = 250    # radio con que se dibuja cada foco al armar la zona con focos VIIRS
+# Área quemada Sentinel-2, umbral doble sembrado con los focos: el núcleo es dNBR ≥ 0.27 a ≤ 750 m de
+# un foco; crece por píxeles contiguos con dNBR ≥ 0.10 y NBR posterior ≤ 0.10 (suelo carbonizado, no
+# chacras cosechadas ni pastos secos), hasta 3 km de los focos. VIIRS solo ve el fuego en sus pases
+# (~01:30 y ~13:30), por eso la cicatriz suele extenderse más allá de los focos.
+DNBR_NUCLEO, DNBR_MIN, NBR_POST_MAX = 0.27, 0.10, 0.10
+R_NUCLEO_M, D_MAX_M = 750, 3000
 CLASES_DNBR = [  # USGS (Key y Benson 2006)
     (0.10, 0.27, "Baja", (250, 204, 21, 170)),
     (0.27, 0.44, "Moderada baja", (249, 115, 22, 190)),
@@ -173,7 +184,31 @@ def buscar_imagenes(o, s, e, n, inicio, corte):
     return dict(sorted(por_fecha.items()))
 
 
-def sentinel(o, s, e, n, inicio, ultimo, corte, shape):
+def _leer_cache(ruta, caja_, shape):
+    if not ruta.exists():
+        return None
+    z = np.load(ruta)
+    if not (np.allclose(z["caja"], caja_) and tuple(z["shape"]) == tuple(shape)):
+        return None
+    res = {"post": str(z["post"]) or None, "pre": str(z["pre"]) or None}
+    for clave in ("post", "pre"):
+        if res[clave]:
+            res[f"img_{clave}"] = {k.split(":")[1]: z[k].astype(np.float32) for k in z.files if k.startswith(clave + ":")}
+    return res
+
+
+def _guardar_cache(ruta, res, caja_, shape):
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    arr = {"caja": np.array(caja_), "shape": np.array(shape), "post": res["post"] or "", "pre": res.get("pre") or ""}
+    for clave in ("post", "pre"):
+        for b, v in res.get(f"img_{clave}", {}).items():
+            arr[f"{clave}:{b}"] = v.astype(np.uint8 if b == "SCL" else np.float16)
+    np.savez_compressed(ruta, **arr)
+
+
+def sentinel(o, s, e, n, inicio, ultimo, corte, shape, cache=None):
+    if cache is not None and (res := _leer_cache(cache, (o, s, e, n), shape)) is not None:
+        return res
     transform = from_bounds(o, s, e, n, shape[1], shape[0])
     try:
         fechas = buscar_imagenes(o, s, e, n, inicio, corte)
@@ -193,7 +228,10 @@ def sentinel(o, s, e, n, inicio, ultimo, corte, shape):
     post = [f for f in despejado if f >= ini and despejado[f] >= 0.80]
     pre = [f for f in despejado if f < ini and despejado[f] >= 0.80]
     if not post:
-        return {"post": None, "pre": None, "despejado": {str(k): round(v, 2) for k, v in despejado.items()}}
+        res = {"post": None, "pre": None}
+        if cache is not None:
+            _guardar_cache(cache, res, (o, s, e, n), shape)
+        return res
     f_post = post[-1]
     img = escena(fechas[f_post], ["B04", "B03", "B02", "B8A", "B12", "SCL"], shape, transform)
     res = {"post": str(f_post), "pre": None, "img_post": img}
@@ -201,7 +239,37 @@ def sentinel(o, s, e, n, inicio, ultimo, corte, shape):
         f_pre = pre[-1]
         res["pre"] = str(f_pre)
         res["img_pre"] = escena(fechas[f_pre], ["B8A", "B12", "SCL"], shape, transform)
+    if cache is not None:
+        _guardar_cache(cache, res, (o, s, e, n), shape)
     return res
+
+
+def area_quemada(dnbr, nbr_post, invalido, dist, px_ha):
+    """Máscara del área quemada: zonas contiguas de píxeles quemados que contienen un núcleo junto a los focos."""
+    candidato = (dnbr >= DNBR_MIN) & (nbr_post <= NBR_POST_MAX) & ~invalido & (dist <= D_MAX_M)
+    candidato = ndi.binary_opening(candidato)
+    etiquetas, _ = ndi.label(candidato, structure=np.ones((3, 3)))
+    nucleo = candidato & (dnbr >= DNBR_NUCLEO) & (dist <= R_NUCLEO_M)
+    q = np.isin(etiquetas, np.setdiff1d(np.unique(etiquetas[nucleo]), [0]))
+    q = ndi.binary_closing(q, iterations=2)
+    # islas sin quemar de menos de 1 ha quedan dentro del área quemada
+    huecos, nh = ndi.label(~q)
+    tam = ndi.sum(np.ones(q.shape), huecos, index=np.arange(1, nh + 1)) * px_ha
+    return q | np.isin(huecos, np.arange(1, nh + 1)[tam < 1])
+
+
+def a_poligono(q, o, s, e, n):
+    """Vectoriza la máscara y quita el escalonado de los píxeles (en metros)."""
+    lat0 = (s + n) / 2
+    partes = [shape(g) for g, v in features.shapes(q.astype(np.uint8), mask=q, transform=from_bounds(o, s, e, n, q.shape[1], q.shape[0]))]
+    if not partes:
+        return None
+    k = 180 / math.pi / R
+    geom = affinity.scale(unary_union(partes), xfact=math.cos(math.radians(lat0)) / k, yfact=1 / k, origin=(0, 0))
+    px_m = (e - o) / q.shape[1] * 111320 * math.cos(math.radians(lat0))
+    geom = geom.buffer(px_m / 2).buffer(-px_m / 2).simplify(px_m * 0.75)
+    polis = [g for g in getattr(geom, "geoms", [geom]) if g.area >= 1e4]
+    return a_lonlat(MultiPolygon(polis), lat0) if polis else None
 
 
 def a_png_color(r, g, b, maximo):
@@ -286,7 +354,7 @@ def procesar(ev_row, focos, corte):
 
     texturas = ["relieve"]
     sev = None
-    s2 = sentinel(o, s, e, n, ev_row.inicio, ev_row.ultimo, corte, dem_tex.shape)
+    s2 = sentinel(o, s, e, n, ev_row.inicio, ev_row.ultimo, corte, dem_tex.shape, CACHE_S2 / f"{eid}.npz")
     info_s2 = {"post": None, "pre": None}
     if s2 and s2.get("post"):
         img = s2["img_post"]
@@ -300,23 +368,38 @@ def procesar(ev_row, focos, corte):
             pre = s2["img_pre"]
             nube = lambda scl: np.isin(scl, [0, 1, 3, 8, 9, 10])
             dnbr = nbr(pre) - nbr(img)
-            dnbr[nube(pre["SCL"]) | nube(img["SCL"]) | (img["SCL"] == 6) | (pre["SCL"] == 6)] = np.nan
-            # solo cerca de los focos del evento (≤ 1.5 km), para no contar cambios ajenos
+            invalido = nube(pre["SCL"]) | nube(img["SCL"]) | (img["SCL"] == 6) | (pre["SCL"] == 6)
             LON, LAT = malla(o, s, e, n, dem_tex.shape[1])
             arbol = cKDTree(a_xy(det.lon.values, det.lat.values, lat0))
-            dist, _ = arbol.query(a_xy(LON.ravel(), LAT.ravel(), lat0))
-            cerca = (dist <= 1500).reshape(LON.shape)
-            px_ha = ((e - o) / dem_tex.shape[1] * 111320 * math.cos(math.radians(lat0))) * \
-                    ((n - s) / dem_tex.shape[0] * 110540) / 1e4
+            dist = arbol.query(a_xy(LON.ravel(), LAT.ravel(), lat0))[0].reshape(LON.shape)
+            px_m = (e - o) / dem_tex.shape[1] * 111320 * math.cos(math.radians(lat0))
+            px_ha = px_m * ((n - s) / dem_tex.shape[0] * 110540) / 1e4
+            q = area_quemada(dnbr, nbr(img), invalido, dist, px_ha)
+            # severidad solo dentro del área quemada (las islas rellenadas cuentan como baja)
+            clase = np.digitize(np.nan_to_num(dnbr, nan=0.0), [c[1] for c in CLASES_DNBR[:-1]])
             rgba = np.zeros(dem_tex.shape + (4,), np.uint8)
             sev = {"pre": s2["pre"], "post": s2["post"], "clases": []}
-            for lo, hi, nombre, color in CLASES_DNBR:
-                m = (dnbr >= lo) & (dnbr < hi)
-                rgba[m & cerca] = color
-                sev["clases"].append({"clase": nombre, "ha": round(float((m & cerca).sum() * px_ha), 0)})
+            for i, (_, _, nombre, color) in enumerate(CLASES_DNBR):
+                rgba[q & (clase == i)] = color
+                sev["clases"].append({"clase": nombre, "ha": round(float((q & (clase == i)).sum() * px_ha), 0)})
             sev["total_ha"] = round(sum(c["ha"] for c in sev["clases"]), 0)
-            sev["pct_sin_dato"] = round(float(np.isnan(dnbr[cerca]).mean() * 100), 0)
-            Image.fromarray(rgba, "RGBA").save(OUT_IMG / f"{eid}_dnbr.png", optimize=True)
+            sev["pct_sin_dato"] = round(float(invalido[dist <= 1500].mean() * 100), 0)
+            # cuánto de lo detectado antes de la imagen (~10:30 h) cae en el área quemada (± medio píxel VIIRS)
+            antes = (det.t_local < pd.Timestamp(s2["post"]) + pd.Timedelta(hours=10, minutes=30)).values
+            f_i = np.clip(((n - det.lat.values) / (n - s) * q.shape[0]).astype(int), 0, q.shape[0] - 1)
+            c_i = np.clip(((det.lon.values - o) / (e - o) * q.shape[1]).astype(int), 0, q.shape[1] - 1)
+            dentro = ndi.distance_transform_edt(~q)[f_i, c_i] * px_m <= 200
+            sev["focos_antes"] = int(antes.sum())
+            sev["focos_antes_dentro_pct"] = round(float(dentro[antes].mean() * 100), 0) if antes.any() else None
+            sev["focos_despues"] = int((~antes).sum())
+            poli = a_poligono(q, o, s, e, n)
+            sev["perimetro"] = redondear_geojson(mapping(poli)) if poli is not None else None
+            if not antes.any():  # la imagen es anterior al primer foco: no puede mostrar este incendio
+                sev = None
+                info_s2["previa_al_fuego"] = True
+                (OUT_IMG / f"{eid}_dnbr.png").unlink(missing_ok=True)
+            else:
+                Image.fromarray(rgba, "RGBA").save(OUT_IMG / f"{eid}_dnbr.png", optimize=True)
 
     filas, perims = avance(det, lat0)
     t0 = det.t_local.min()
@@ -339,7 +422,9 @@ def procesar(ev_row, focos, corte):
     with open(OUT_DATA / f"{eid}.json", "w") as fh:
         json.dump(out, fh, ensure_ascii=False, separators=(",", ":"))
     print(f"   texturas={texturas} S2 post={info_s2['post']} pre={info_s2['pre']} "
-          f"sev={None if not sev else sev['total_ha']} ha; días={len(filas)}")
+          f"quemado={None if not sev else sev['total_ha']} ha "
+          f"(focos previos dentro {None if not sev else sev['focos_antes_dentro_pct']} %)"
+          f"{' imagen previa al fuego' if info_s2.get('previa_al_fuego') else ''}; días={len(filas)}")
     return eid
 
 
@@ -352,11 +437,12 @@ def main():
         sel = [a for a in sys.argv[1:] if not a.startswith("--")]
     hechos = []
     forzar = "--forzar" in sys.argv
+    explicitos = set(sel) if len([a for a in sys.argv[1:] if not a.startswith("--")]) else set()
     if forzar:  # datos nuevos: los ids de evento cambian, se borra todo lo anterior
         for viejo in list(OUT_DATA.glob("*.json")) + list(OUT_IMG.glob("*")):
             viejo.unlink()
     for eid in sel:
-        if not forzar and (OUT_DATA / f"{eid}.json").exists():
+        if not forzar and eid not in explicitos and (OUT_DATA / f"{eid}.json").exists():
             hechos.append(eid)  # ya generado en una corrida anterior con los mismos datos
             continue
         hechos.append(procesar(ev.set_index("evento").loc[eid].rename(eid).pipe(
