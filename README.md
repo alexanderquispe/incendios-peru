@@ -13,12 +13,13 @@ Sentinel-2 y límites oficiales.
 
 | Sección | Contenido |
 |---|---|
-| Situación nacional | Incendios activos > 100 ha, focos 24 h / 7 días, octubre y temporada frente a 2012–2025, áreas protegidas con focos, población a ≤ 5 km de focos recientes |
-| Dónde está el fuego | Mapa nacional con focos por antigüedad, incendios activos, áreas protegidas y animación de la temporada; lista de incendios activos ordenada por un índice de prioridad (0–100) |
-| El incendio, día por día | Vista 3D de 15 incendios priorizados: relieve real, imagen Sentinel-2 (color natural e infrarrojo), perímetro acumulado por día, severidad del quemado (dNBR) y gráficos de huella, intensidad (FRP) y altitud |
-| Cómo va la temporada | Focos S-NPP acumulados desde el 1 de julio por año (2012–2026) y focos diarios frente al rango histórico |
-| Departamentos | Focos 24 h / 7 días / temporada, tendencia de 30 días, anomalía frente a 2012–2025, incendios activos y focos en ANP |
-| Contexto oficial y validación | Cifras del COEN, INDECI, SENAMHI, CENEPRED y MINAM/SERNANP con su fuente; cotejo de incendios reportados con las detecciones |
+| Resumen | Titular con la conclusión del día, cifras clave con su contexto 2012–2026 (mini-barras por año), variación de focos frente a las 24 h previas, antigüedad de los datos y glosario mínimo |
+| Atención prioritaria | Tres listas para decidir: incendios que más se extienden (huella nueva en 24 h), incendios activos con más población a ≤ 5 km y áreas protegidas con más focos en 7 días |
+| Mapa | Mapa nacional con focos por antigüedad, incendios activos, áreas protegidas, escala y animación de la temporada; lista de los 25 incendios activos de mayor prioridad (0–100) con los factores que más pesan |
+| Incendio en 3D | Vista 3D de 15 incendios priorizados: relieve real, imagen Sentinel-2 (color natural e infrarrojo), perímetro acumulado por día, severidad del quemado (dNBR), brújula y gráficos de huella, intensidad (FRP) y altitud |
+| Temporada | Focos S-NPP por día frente al rango 2012–2025 y acumulado desde el 1 de julio, con títulos que dicen el hallazgo |
+| Departamentos | Focos 24 h / 7 días / temporada, tendencia de 30 días, anomalía frente a 2012–2025, incendios activos y focos en ANP; al elegir un departamento, el mapa lo encuadra |
+| Fuentes y método | Cifras del COEN, INDECI, SENAMHI, CENEPRED y MINAM/SERNANP con su fuente; cotejo de incendios reportados con las detecciones; metodología |
 
 ## Hallazgos al corte (17 oct 2026, 02:01 h de Lima)
 
@@ -26,7 +27,8 @@ Sentinel-2 y límites oficiales.
   y por encima del récord previo (2020: 11,776).
 - **Temporada tardía**: del 1 de julio al 16 de octubre el acumulado va 17 % por debajo del promedio (puesto 12 de 15); julio,
   agosto y setiembre quedaron bajo el promedio.
-- 56 incendios activos con huella mayor a 100 ha; 2,812 focos en 24 h y 13,915 en 7 días.
+- 56 incendios activos con huella mayor a 100 ha; 2,812 focos en 24 h (9 % menos que las 24 h previas) y 13,915 en 7 días.
+- Los que más se extendieron en 24 h: Manantay (Ucayali, +492 ha de huella), San Juan de Jarpa (Junín) y Chichas (Arequipa, +422 ha cada uno).
 - Los incendios activos más extensos están en Curahuasi y San Pedro de Cachora (Abancay, Apurímac) y en Río Tambo
   (Satipo, Junín), a 8.7 km de la Reserva Comunal Asháninka.
 - 28 áreas naturales protegidas con focos en 7 días (Imiria, Pacaya-Samiria y Subcuenca del Cotahuasi, las más afectadas).

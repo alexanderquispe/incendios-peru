@@ -115,6 +115,15 @@ def main():
     ev["horas_desde_ultimo"] = horas_sin.round(1)
     ev["estado"] = np.select([horas_sin <= 24, horas_sin <= 72], ["Activo", "En observación"], "Sin actividad reciente")
 
+    # últimas 24 h: focos y huella nueva (celdas de 375 m con fuego por primera vez)
+    reciente = corte - pd.Timedelta(hours=24)
+    celdas = np.floor(a_metros(f.lon.values, f.lat.values) / CELDA_M).astype(np.int64)
+    primera = (pd.DataFrame({"evento": f.evento, "cx": celdas[:, 0], "cy": celdas[:, 1], "t": f.t_local})
+               .groupby(["evento", "cx", "cy"]).t.min())
+    ev["focos_24h"] = f[f.t_local > reciente].groupby("evento").size().reindex(ev.index, fill_value=0)
+    ev["huella_24h_ha"] = ((primera > reciente).groupby(level="evento").sum()
+                           .reindex(ev.index, fill_value=0) * CELDA_M ** 2 / 1e4)
+
     # distancia a ANP (si no está dentro) y capital distrital más cercana
     anp = gpd.read_parquet(INT / "anp.parquet").to_crs(32718)
     pts = gpd.GeoSeries(gpd.points_from_xy(ev.lon, ev.lat), crs=4326).to_crs(32718)

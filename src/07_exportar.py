@@ -69,6 +69,7 @@ def main():
     hasta_md = (hoy - pd.Timedelta(days=1)).strftime("%m-%d")  # último día completo
     temporada = focos[focos.fecha >= INICIO]
     f24 = focos[focos.t_local > corte - pd.Timedelta(hours=24)]
+    f48 = focos[focos.t_local > corte - pd.Timedelta(hours=48)]
     f7 = focos[focos.t_local > corte - pd.Timedelta(days=7)]
     hist["anio"] = hist.fecha.dt.year
 
@@ -96,7 +97,8 @@ def main():
         "ultimo_dia_completo": (hoy - pd.Timedelta(days=1)).strftime("%Y-%m-%d"),
         "inicio_temporada": INICIO.strftime("%Y-%m-%d"),
         "generado_utc": pd.Timestamp.now(tz="UTC").strftime("%Y-%m-%d %H:%M"),
-        "focos_24h": int(len(f24)), "focos_7d": int(len(f7)), "focos_temporada": int(len(temporada)),
+        "focos_24h": int(len(f24)), "focos_24h_previas": int(len(f48) - len(f24)),
+        "focos_7d": int(len(f7)), "focos_temporada": int(len(temporada)),
         "eventos_activos": int(len(activos)),
         "eventos_activos_100ha": int((activos.huella_ha >= 100).sum()),
         "eventos_activos_3focos": int((activos.focos >= 3).sum()),
@@ -191,7 +193,8 @@ def main():
         "nota": "lon y lat ×1e4; h = horas antes del corte; frp en MW ×10; sat 0=S-NPP 1=NOAA-20 2=NOAA-21",
         "corte_local": corte.strftime("%Y-%m-%d %H:%M"),
         "lon": (t.lon * 1e4).round().astype(int).tolist(), "lat": (t.lat * 1e4).round().astype(int).tolist(),
-        "h": ((corte - t.t_local).dt.total_seconds() / 3600).round().astype(int).tolist(),
+        # hacia arriba, para que h <= 24 coincida con la ventana de 24 h de los indicadores
+        "h": np.ceil((corte - t.t_local).dt.total_seconds() / 3600).astype(int).tolist(),
         "frp": (t.frp.fillna(0) * 10).round().astype(int).tolist(),
         "sat": t.satelite.map({"S-NPP": 0, "NOAA-20": 1, "NOAA-21": 2}).astype(int).tolist(),
         "distrito": t.ubigeo.map(dist_idx).astype(int).tolist(),
@@ -201,7 +204,8 @@ def main():
     # ------------------------------------------------------------ eventos
     sel = json.load(open(OUT / "eventos" / "seleccion.json")) if (OUT / "eventos" / "seleccion.json").exists() else []
     cols = ["evento", "estado", "departamento", "provincia", "distrito", "ubigeo", "inicio", "ultimo",
-            "horas_desde_ultimo", "duracion_dias", "focos", "dias_con_focos", "huella_ha", "frp_total", "frp_max",
+            "horas_desde_ultimo", "duracion_dias", "focos", "dias_con_focos", "huella_ha", "focos_24h",
+            "huella_24h_ha", "frp_total", "frp_max",
             "elev_min", "elev_med", "elev_max", "pendiente_med", "region", "cobertura", "pct_bosque",
             "anp", "anp_admin", "focos_en_anp", "anp_cercana", "dist_anp_km", "capital_cercana",
             "dist_capital_km", "poblacion_5km", "prioridad", "p_actividad", "p_tamano", "p_intensidad",
