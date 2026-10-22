@@ -476,7 +476,7 @@ table.sel tbody tr[aria-selected="true"] { background: var(--accent-soft); }
 .antig { display: inline-block; height: 6px; background: var(--fire-old); border-radius: 2px; vertical-align: 1px; margin-right: 6px; }
 .verif { font-size: 0.72rem; color: var(--ink-3); }
 .cobertura-ficha { display: grid; gap: 5px; }
-.otros-alumnos { font-size: var(--step--2); color: var(--ink-2); display: grid; gap: 2px; }
+.rejilla-1 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 td .lugar { font-weight: 600; }
 td .lugar small { margin-left: 6px; font-weight: 400; color: var(--ink-3); font-size: 0.78rem; }
 #tabla-normas td, #tabla-normas th { text-align: left; white-space: normal; vertical-align: top; }
@@ -646,13 +646,7 @@ td .lugar small { margin-left: 6px; font-weight: 400; color: var(--ink-3); font-
       <div class="tabla-caja"><table id="tabla-quemado"></table></div>
       <p class="pie-tabla" id="quemado-pie"></p>
     </div>
-    <div class="rejilla-2">
-      <div class="panel grafico" id="g-metodos-caja">
-        <h3 id="t-metodos">La misma cicatriz, medida por distintas personas</h3>
-        <p class="sub">Hectáreas de área quemada según el tablero y según las entregas del curso; cada punto es una medición</p>
-        <div class="clave" id="clave-metodos"></div>
-        <div id="g-metodos"></div>
-      </div>
+    <div class="rejilla-1">
       <div class="panel grafico" id="g-cobertura-caja">
         <h3 id="t-cobertura">Qué se quemó</h3>
         <p class="sub">Cobertura del suelo dentro del área quemada (ESA WorldCover 2021, 10 m), en hectáreas</p>
@@ -1586,7 +1580,7 @@ function pintarFicha() {
   $("#ficha-img").textContent = s2.post ? `Imagen Sentinel-2 L2A del ${fechaCorta(s2.post)} (Copernicus, vía Microsoft Planetary Computer). En la vista infrarroja, la vegetación se ve verde y el área quemada, rojo oscuro. Relieve: AWS Terrain Tiles; exageración vertical ×${fmt1.format(E3.exag)}.`
     : `Sin imagen Sentinel-2 despejada posterior al inicio; se muestra el relieve. Exageración vertical ×${fmt1.format(E3.exag)}.`;
 }
-// qué se quemó, qué hay alrededor y qué midieron los alumnos para este mismo incendio
+// qué se quemó y qué hay alrededor del área quemada
 function fichaQuemadoExtra(id, sev) {
   const out = [];
   if (sev.cobertura?.length) {
@@ -1601,10 +1595,6 @@ function fichaQuemadoExtra(id, sev) {
   if (f?.exposicion) {
     const x = f.exposicion;
     out.push(el("span", { class: "nota-chica", text: `Edificaciones: ${fmt.format(x.edif_dentro)} dentro del área quemada, ${fmt.format(x.edif_100m)} a ≤ 100 m y ${fmt.format(x.edif_1km)} a ≤ 1 km del borde. Personas a ≤ 1 km: ${fmt.format(x.pob_1km)}.` }));
-  }
-  if (f?.alumnos?.length) {
-    out.push(el("div", { class: "otros-alumnos" }, el("span", { class: "eyebrow", text: "Otras mediciones de este incendio" }),
-      ...f.alumnos.map(a => el("span", {}, el("b", { text: `${fmt.format(a.ha)} ha` }), ` · ${a.alumno}: ${a.metodo}`))));
   }
   return out;
 }
@@ -1849,7 +1839,7 @@ function pintarMetodo() {
 const PESTANAS = {
   situacion: { iniciar: () => iniciarMapa() },
   incendios: { iniciar: () => { iniciar3D(); pintarQuemado(); },
-    dibujar: () => { if (E3.datos) dibujarGraficosEvento(); dibujarMetodos(); dibujarCobertura(); } },
+    dibujar: () => { if (E3.datos) dibujarGraficosEvento(); dibujarCobertura(); } },
   clima: { iniciar: () => pintarClima(), dibujar: () => { if (C.sel && D.clima) dibujarSerieClima(D.clima.series[C.sel]); } },
   afectados: { iniciar: () => pintarAfectados(), dibujar: () => dibujarDepExp() },
   agua: { iniciar: () => pintarAgua(), dibujar: () => dibujarAgua() },

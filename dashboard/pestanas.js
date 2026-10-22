@@ -174,7 +174,7 @@ function pintarAfectados() {
     tb.append(el("tr", {}, el("td", {}, nom, el("br"), el("span", { class: "tenue", text: `${fmt.format(fila.incendios)} incendios` })),
       ...radios.map(r => { const c = color(Math.max(100, fila[r])); return el("td", { style: `background:${c};color:${d3.hsl(c).l > 0.55 ? "#0f1b26" : "#fff"}`, text: fmtHab(fila[r]) }); })));
   }
-  $("#nota-sens").textContent = "Fila destacada en el resto del tablero: probables activos o en observación. Idea de Josselin Yauri y Ricardo Macedo; filtro de evidencia de Diego Sime y Rodrigo Norabuena.";
+  $("#nota-sens").textContent = "El resto del tablero usa la segunda fila: incendios de vegetación probables, activos o en observación.";
   // tabla por incendio
   const lista = vivosProbables().filter(e => e.pob_1km != null).sort((a, b) => (b.poblacion_5km || 0) - (a.poblacion_5km || 0));
   const tb2 = encabezado($("#tabla-expo"), ["Incendio", "Estado", "Personas ≤ 1 km", "≤ 5 km", "Edificaciones ≤ 1 km", "≤ 5 km", "Salud ≤ 5 km", "Más cercano", "Centros poblados ≤ 5 km", "Sin 4G"]);
@@ -222,8 +222,8 @@ function pintarAgua() {
   const a26 = a["2026"];
   $("#agua-intro").textContent = `Del 1 de julio al ${fechaCorta(h.hasta)}, ${fmt.format(a26.altoandino)} focos cayeron sobre 3,800 m, donde nacen los ríos ` +
     `(promedio 2012–2025: ${fmt.format(prom("altoandino"))}); ${fmt.format(a26.agua_alto)} estaban junto a lagunas o bofedales. ` +
-    `Dentro de áreas protegidas hubo ${fmt.format(a26.anp)} focos (promedio ${fmt.format(prom("anp"))}). Pregunta planteada por Estefanny Mejía; ` +
-    `las lagunas y bofedales salen de ESA WorldCover y son una aproximación.`;
+    `Dentro de áreas protegidas hubo ${fmt.format(a26.anp)} focos (promedio ${fmt.format(prom("anp"))}). Las lagunas ` +
+    `y bofedales salen de ESA WorldCover y son una aproximación.`;
   const tb = encabezado($("#tabla-anp-hist"), ["Área natural protegida", "2026", "Promedio 2012–2025", "Cambio"]);
   for (const r of h.agua.anp_2026) {
     const cambio = r.promedio >= 5 ? Math.round((r.anio_2026 / r.promedio - 1) * 100) : null;
@@ -231,7 +231,7 @@ function pintarAgua() {
       td(cambio == null ? "n. d." : signo(cambio) + " %", cambio > 0 ? "" : "tenue")]));
   }
   const mb = h.mapbiomas;
-  if (mb) $("#nota-mapbiomas").textContent = `${mb.fuente} Total: ${fmt.format(mb.total_ha)} ha quemadas por primera vez en ${mb.periodo}. Por departamento, extraído del ráster acumulado por Flavia Romero Piedra.`;
+  if (mb) $("#nota-mapbiomas").textContent = `${mb.fuente} Total: ${fmt.format(mb.total_ha)} ha quemadas por primera vez en ${mb.periodo}. Por departamento, desde el ráster acumulado.`;
 }
 function serieAnual(cont, anios, valores, etiqueta, destacados = { "2026": "--y2026", "2024": "--y2024" }) {
   const { svg, iw, ih, m } = svgBase(cont, 220, { t: 14, r: 10, b: 24, l: 44 });
@@ -284,54 +284,20 @@ function pintarQuemado() {
   $("#quemado-intro").textContent = `Sentinel-2 midió ${fmt.format(total)} ha quemadas en ${medidos.length} de los ${q.filas.length} incendios con vista 3D` +
     (sin.length ? `; en ${sin.length} las nubes o la falta de una imagen posterior no lo permiten (${unir(sin.map(f => f.distrito))}).` : ".") +
     " Seleccione una fila para verla en el terreno.";
-  const tb = encabezado($("#tabla-quemado"), ["Incendio", "Área quemada", "Con dNBR ≥ 0.27", "Sin dato", "Imágenes", "Qué se quemó", "Huella VIIRS", "Otras mediciones"]);
+  const tb = encabezado($("#tabla-quemado"), ["Incendio", "Área quemada", "Con dNBR ≥ 0.27", "Sin dato", "Imágenes", "Qué se quemó", "Huella VIIRS"]);
   $("#tabla-quemado").classList.add("sel");
   for (const f of [...medidos.sort((a, b) => b.total_ha - a.total_ha), ...sin]) {
     const cob = f.cobertura?.length ? f.cobertura.slice(0, 2).map(c => `${c.clase} ${fmt.format(c.ha / f.total_ha * 100)} %`).join(", ") : "—";
-    const otros = f.alumnos?.length ? `${f.alumnos.length}: ${fmt.format(d3.min(f.alumnos, a => a.ha))}–${fmt.format(d3.max(f.alumnos, a => a.ha))} ha` : "—";
     tb.append(filaTabla([
       el("span", { class: "lugar" }, f.distrito, el("small", { text: `${f.provincia} · ${f.departamento}` })),
       td(f.medido ? `${fmt.format(f.total_ha)} ha` : "no medible", f.medido ? "" : "tenue"),
       td(f.medido ? `${fmt.format(f.ha_027)} ha` : "—"),
       td(f.medido ? `${fmt.format(f.pct_sin_dato)} %` : "—", f.pct_sin_dato > 20 ? "" : "tenue"),
       td(f.sentinel.post ? `${fechaCorta(f.sentinel.pre || f.sentinel.post)} → ${fechaCorta(f.sentinel.post)}${f.focos_despues ? ` · ${fmt.format(f.focos_despues)} focos después` : ""}` : "sin imagen", "tenue"),
-      td(cob), td(`${fmt.format(f.huella_ha)} ha`, "tenue"), td(otros, "tenue"),
+      td(cob), td(`${fmt.format(f.huella_ha)} ha`, "tenue"),
     ], { tabindex: "0", onclick: () => { seleccionarEvento(f.evento, false); $("#sel-evento").value = f.evento; desplazar("incendio"); } }));
   }
   $("#quemado-pie").textContent = "Área quemada: núcleo con dNBR ≥ 0.27 junto a los focos, más los píxeles contiguos con dNBR ≥ 0.10 y suelo carbonizado. «Con dNBR ≥ 0.27» es lo que daría un solo umbral: en la puna el pajonal arde con dNBR bajo y la diferencia es grande. «Sin dato»: entorno cubierto por nubes, sombra o nieve; si es alto, la cifra es un mínimo. «Focos después»: el fuego siguió tras la imagen y el área real puede ser mayor.";
-}
-function dibujarMetodos() {
-  const q = D.quemado; if (!q) return;
-  const filas = q.filas.filter(f => f.alumnos?.length && f.medido);
-  const cont = $("#g-metodos");
-  if (!filas.length) { cont.replaceChildren(el("p", { class: "nota-chica", text: "Sin mediciones comparables." })); return; }
-  const puntos = filas.flatMap(f => [{ f, ha: f.total_ha, quien: "Tablero", tipo: "tablero" }, { f, ha: f.ha_027, quien: "Tablero, solo dNBR ≥ 0.27", tipo: "umbral" },
-    ...f.alumnos.map(a => ({ f, ha: a.ha, quien: a.alumno, tipo: a.oficial ? "oficial" : "alumno", metodo: a.metodo }))]);
-  const { svg, iw, ih, m } = svgBase(cont, filas.length * 34 + 34, { t: 6, r: 18, b: 24, l: 118 });
-  svg.attr("aria-label", "Área quemada de cada incendio según el tablero y según las entregas del curso");
-  const g = svg.append("g").attr("transform", `translate(${m.l},${m.t})`);
-  const y = d3.scaleBand().domain(filas.map(f => f.distrito)).range([0, ih]).padding(0.3);
-  const x = d3.scaleLog().domain([Math.max(5, d3.min(puntos, p => p.ha) * 0.7), d3.max(puntos, p => p.ha) * 1.15]).range([0, iw]);
-  const marcas = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000].filter(v => v >= x.domain()[0] && v <= x.domain()[1]);
-  g.append("g").attr("class", "rejilla").attr("transform", `translate(0,${ih})`).call(d3.axisBottom(x).tickValues(marcas).tickSize(-ih).tickFormat("")).call(a => a.select(".domain").remove());
-  g.append("g").attr("class", "eje").attr("transform", `translate(0,${ih})`).call(d3.axisBottom(x).tickValues(marcas).tickFormat(v => fmt.format(v) + (v === marcas[marcas.length - 1] ? " ha" : "")));
-  g.append("g").attr("class", "eje").call(d3.axisLeft(y).tickSize(0)).call(a => a.select(".domain").remove());
-  for (const f of filas) {
-    const ys = puntos.filter(p => p.f === f).map(p => p.ha);
-    g.append("line").attr("x1", x(d3.min(ys))).attr("x2", x(d3.max(ys))).attr("y1", y(f.distrito) + y.bandwidth() / 2).attr("y2", y(f.distrito) + y.bandwidth() / 2).attr("stroke", token("--line-2")).attr("stroke-width", 2);
-  }
-  const estilo = { tablero: ["--fire-24", 6.5], umbral: ["--fire-old", 5], alumno: ["--accent", 4.5], oficial: ["--anp", 5] };
-  const caja = cont.parentElement, t = tooltip(caja);
-  g.selectAll("circle").data(puntos).join("circle").attr("cx", p => x(p.ha)).attr("cy", p => y(p.f.distrito) + y.bandwidth() / 2)
-    .attr("r", p => estilo[p.tipo][1]).attr("fill", p => (p.tipo === "umbral" ? token("--panel") : token(estilo[p.tipo][0])))
-    .attr("stroke", p => token(estilo[p.tipo][0])).attr("stroke-width", p => (p.tipo === "umbral" ? 2 : 1.5)).attr("opacity", 0.92)
-    .on("pointermove", (ev, p) => { const [cx, cy] = d3.pointer(ev, caja); ponerTip(t, caja, cx, cy, `<b>${p.f.distrito}</b> · ${p.quien}<br><span class="num">${fmt.format(p.ha)} ha</span>${p.metodo ? "<br>" + p.metodo : ""}`); })
-    .on("pointerleave", () => { t.hidden = true; });
-  $("#clave-metodos").replaceChildren(
-    el("span", {}, el("i", { class: "punto", style: `background:${token("--fire-24")};width:10px;height:10px;border-radius:50%;border:0;vertical-align:-1px` }), "Tablero"),
-    el("span", {}, el("i", { class: "punto", style: `border:2px solid ${token("--fire-old")};width:9px;height:9px;border-radius:50%;vertical-align:-1px` }), "Tablero, solo dNBR ≥ 0.27"),
-    el("span", {}, el("i", { class: "punto", style: `background:${token("--accent")};width:9px;height:9px;border-radius:50%;border:0;vertical-align:-1px` }), "Entregas del curso"),
-    el("span", {}, el("i", { class: "punto", style: `background:${token("--anp")};width:9px;height:9px;border-radius:50%;border:0;vertical-align:-1px` }), "Cifra oficial"));
 }
 const COLORES_COB = { "Pastizal": "#c9a227", "Bosque": "#2f7d4f", "Matorral": "#8f9a3a", "Cultivo": "#d77a3d", "Humedal herbáceo": "#3a8fa6", "Suelo desnudo": "#a89f91", "Otros": "#7c8792" };
 function dibujarCobertura() {
@@ -358,7 +324,7 @@ function dibujarCobertura() {
     .on("pointermove", (ev, d) => { const [cx, cy] = d3.pointer(ev, caja); ponerTip(t, caja, cx, cy, `<b>${d.v.data.distrito}</b><br>${d.clase}: <span class="num">${fmt.format(d.v[1] - d.v[0])} ha</span> (${fmt.format((d.v[1] - d.v[0]) / d.v.data.total * 100)} %)`); })
     .on("pointerleave", () => { t.hidden = true; });
   $("#clave-cobertura").replaceChildren(...clases.filter(c => d3.sum(datos, d => d[c]) > 0).map(c => el("span", {}, el("i", { class: "banda", style: `background:${COLORES_COB[c]}` }), c)));
-  $("#nota-cobertura").textContent = "WorldCover casi no distingue chacras ni pastos cultivados: Josué Soria mostró que el 23 % de los focos cae en la Superficie Agrícola Nacional 2024 del MIDAGRI, pero solo el 1.9 % en «cultivo» de WorldCover. Mirian de la Cruz mostró que el fuego elige: en Chichas el pastizal era el 37 % del entorno y fue el 70 % de lo quemado.";
+  $("#nota-cobertura").textContent = "WorldCover casi no distingue chacras ni pastos cultivados: el 23 % de los focos cae en la Superficie Agrícola Nacional 2024 del MIDAGRI, pero solo el 1.9 % en «cultivo» de WorldCover. El fuego elige: en Chichas el pastizal es la mitad del entorno y casi tres cuartos de lo quemado.";
 }
 
 /* ---------------------------------------------------------------- temporada: récords y 2024 */
@@ -459,12 +425,12 @@ function pintarAcciones() {
   const a = D.contexto.acciones; if (!a?.length) return;
   $("#acciones-intro").textContent = `${a.length} acciones registradas por el COEN-INDECI en el incendio de la comunidad nativa Tsyapo, del inicio a la emergencia: ` +
     `${a.filter(x => x.nivel === "Nacional").length} del nivel nacional, ${a.filter(x => x.nivel === "Regional").length} regionales y ${a.filter(x => x.nivel === "Local").length} locales. ` +
-    `Recopiló Noelia León del Reporte complementario N.º 14680 (21 oct); cada fila se cotejó con el reporte.`;
+    `Tomadas del Reporte complementario N.º 14680 (21 oct); cada fila se cotejó con el reporte.`;
   $("#lista-acciones").replaceChildren(...a.map(x => el("li", {},
     el("span", { class: "fecha", text: fechaCorta(x.fecha) }), el("span", { class: "nivel " + x.nivel, text: x.nivel }),
     el("span", { class: "txt" }, el("span", { class: "ent", text: x.entidad + ". " }), x.accion))));
   const f = a[0];
-  $("#lista-acciones").after(el("p", { class: "nota-chica" }, "Fuente: ", el("a", { href: f.url, target: "_blank", rel: "noopener", text: f.fuente }), ` (copia en el repositorio de ${f.recopilado_por}).`));
+  $("#lista-acciones").after(el("p", { class: "nota-chica" }, "Fuente: ", el("a", { href: f.url, target: "_blank", rel: "noopener", text: f.fuente }), "."));
 }
 function dibujarAcciones() {
   const a = D.contexto.acciones; if (!a?.length) return;
@@ -501,7 +467,7 @@ function dibujarAcciones() {
 }
 function pintarNormas() {
   const n = D.contexto.normas; if (!n) return;
-  $("#normas-intro").textContent = `Políticas, planes y leyes nacionales sobre incendios forestales, bosques y agricultura, recopiladas por ${n.recopilado_por} y revisadas el ${fechaCorta(n.revisado)} de 2026. La barra muestra los años desde la última actualización publicada.`;
+  $("#normas-intro").textContent = `Políticas, planes y leyes nacionales sobre incendios forestales, bosques y agricultura, revisadas el ${fechaCorta(n.revisado)} de 2026. La barra muestra los años desde la última actualización publicada.`;
   const hoy = new Date(n.revisado + "T00:00");
   const anios = s => (hoy - new Date((s.length === 4 ? s + "-07-01" : s.length === 7 ? s + "-15" : s) + "T00:00")) / (365.25 * 864e5);
   const tb = encabezado($("#tabla-normas"), ["Norma", "Entidad", "Aprobada", "Última actualización", "Estado", "Fuente"]);

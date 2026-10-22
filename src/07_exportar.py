@@ -265,7 +265,6 @@ def main():
         guardar("exposicion.json", {**expo, "salud_cercanos": cerca})
 
     # ------------------------------------------------------------ área quemada (Sentinel-2) de los incendios con 3D
-    alumnos = json.load(open(RAIZ / "data" / "curso" / "cifras_alumnos.json"))
     eq = pd.read_parquet(PRO / "exposicion_quemado.parquet").set_index("evento") if (PRO / "exposicion_quemado.parquet").exists() else pd.DataFrame()
     filas_q = []
     for eid in sel:
@@ -285,14 +284,7 @@ def main():
         if eid in eq.index:
             fila["exposicion"] = {k: int(v) for k, v in eq.loc[eid].items()}
         filas_q.append(fila)
-    # las mediciones de los alumnos van al incendio del distrito con más focos (el que estudiaron)
-    principal = {}
-    for f in filas_q:
-        if f["focos"] > principal.get(f["distrito"], {"focos": -1})["focos"]:
-            principal[f["distrito"]] = f
-    for f in filas_q:
-        f["alumnos"] = alumnos["incendios"].get(f["distrito"]) if principal[f["distrito"]] is f else None
-    guardar("quemado.json", {"nota_alumnos": alumnos["nota"], "filas": filas_q})
+    guardar("quemado.json", {"filas": filas_q})
 
     # ------------------------------------------------------------ historia (11_historia) y créditos
     if (PRO / "historia.json").exists():

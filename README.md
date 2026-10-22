@@ -5,7 +5,7 @@ Inspirado en el prototipo de análisis de incendios de [@DilumSanjaya](https://x
 que usaba terreno procedural y datos simulados. Esta versión usa datos reales del Perú: focos VIIRS, relieve real, imágenes
 Sentinel-2 y límites oficiales.
 
-**Tablero publicado:** https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU (abierto para quien tenga el enlace).
+**Sitio web:** https://alexanderquispe.github.io/incendios-peru/ (GitHub Pages; se publica solo con cada cambio en `main`, ver `.github/workflows/pages.yml` y `src/sitio.py`). También está en https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU.
 
 **Repositorio:** https://github.com/alexanderquispe/incendios-peru. Quienes colaboraron en el curso tienen permiso de escritura: trabaje en una rama propia y abra un *pull request* hacia `main`.
 
@@ -106,6 +106,7 @@ src/
   terreno.py         utilidades de teselas de elevación
   actualizar.py      corre todo en orden
   servir.py          servidor local del tablero
+  sitio.py           arma el sitio de GitHub Pages en _site/
 dashboard/           página (index.html, pestanas.js), datos (data/) e imágenes (assets/)
 data/curso/          aportes curados del curso: créditos, acciones del Estado, normas, cifras de los alumnos, MapBiomas
 analisis/            análisis puntuales (2024 frente a 2026)
