@@ -5,7 +5,7 @@ Inspirado en el prototipo de análisis de incendios de [@DilumSanjaya](https://x
 que usaba terreno procedural y datos simulados. Esta versión usa datos reales del Perú: focos VIIRS, relieve real, imágenes
 Sentinel-2 y límites oficiales.
 
-**Sitio web:** https://alexanderquispe.github.io/incendios-peru/ (GitHub Pages; se publica solo con cada cambio en `main`, ver `.github/workflows/pages.yml` y `src/sitio.py`). También está en https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU.
+**Sitio web:** https://alexanderquispe.github.io/incendios-peru/ (GitHub Pages; se publica solo con cada cambio en `main`, ver `.github/workflows/pages.yml` y `src/sitio.py`). El pie del sitio muestra un contador de visitas (una por sesión del navegador, servicio abierto [Abacus](https://abacus.jasoncameron.dev), sin cookies) que no aparece en el Artifact. También está en https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU.
 
 **Repositorio:** https://github.com/alexanderquispe/incendios-peru. Es código abierto: cualquier persona puede abrir un *issue* o
 proponer cambios con un *fork* y un *pull request* hacia `main`. Quienes colaboraron en el curso tienen permiso de escritura y
