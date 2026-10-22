@@ -7,7 +7,9 @@ Sentinel-2 y límites oficiales.
 
 **Sitio web:** https://alexanderquispe.github.io/incendios-peru/ (GitHub Pages; se publica solo con cada cambio en `main`, ver `.github/workflows/pages.yml` y `src/sitio.py`). También está en https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU.
 
-**Repositorio:** https://github.com/alexanderquispe/incendios-peru. Quienes colaboraron en el curso tienen permiso de escritura: trabaje en una rama propia y abra un *pull request* hacia `main`.
+**Repositorio:** https://github.com/alexanderquispe/incendios-peru. Es código abierto: cualquier persona puede abrir un *issue* o
+proponer cambios con un *fork* y un *pull request* hacia `main`. Quienes colaboraron en el curso tienen permiso de escritura y
+pueden trabajar en una rama propia del repositorio.
 
 > Herramienta independiente. No es un producto oficial del Estado peruano ni reemplaza los reportes del COEN, INDECI, SERFOR o SERNANP.
 
@@ -150,3 +152,9 @@ Este tablero integra métodos, datos y hallazgos de las entregas de la sesión 1
 `data/curso/creditos.json` y en la pestaña *Método y créditos*.
 
 Adriana Garcés, Alessandra Valeria Murga Rimac, Alexander Noblejas, Amanda Gomez, Ana Karen Zamalloa Lima, Cristian Moises Wong Pagan, Diego Enrique Sime Rendón, Estefanny Mejía, Fabricio Luna Palacios, Fiorella Ampuero, Fiorella del Rocío Becerril Mercado, Flavia Romero Piedra, Frank Pinares Gutiérrez, Gabriela Pozo, Greicy Rodriguez, Hideki Harada, Isabella Albarrán Chávez, Ivette Mamani Flores, Jhanela Carhuaz Fuster, Jose Navarro, Josselin Yauri Condor, Josué Soria, Lory Acosta, Luis Guevara Vega, Mirian de la Cruz Condori, Noelia Fernanda Leon Ruiz, Oscar Andres Chávez Inocente, Ricardo Antonio Macedo Villegas, Roddy Huarhua, Rodrigo Norabuena, Víctor Guardia y Ximena Pinillos Zegarra.
+
+## Licencia
+
+El código está bajo licencia [MIT](LICENSE). Los datos y textos que genera el tablero (`dashboard/data`, `data/processed`) se
+comparten bajo [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es): se pueden usar citando este repositorio y las
+fuentes originales, que mantienen sus propias licencias (WorldPop, Google Open Buildings, ESA WorldCover y MapBiomas piden atribución).
