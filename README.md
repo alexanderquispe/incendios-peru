@@ -5,7 +5,9 @@ Inspirado en el prototipo de análisis de incendios de [@DilumSanjaya](https://x
 que usaba terreno procedural y datos simulados. Esta versión usa datos reales del Perú: focos VIIRS, relieve real, imágenes
 Sentinel-2 y límites oficiales.
 
-**Tablero publicado:** https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU (privado hasta que se comparta desde el menú *Share*).
+**Tablero publicado:** https://claude.ai/artifact/UsyGgMV7ysFBEDzzrW5DeU (abierto para quien tenga el enlace).
+
+**Repositorio:** https://github.com/alexanderquispe/incendios-peru. Quienes colaboraron en el curso tienen permiso de escritura: trabaje en una rama propia y abra un *pull request* hacia `main`.
 
 > Herramienta independiente. No es un producto oficial del Estado peruano ni reemplaza los reportes del COEN, INDECI, SERFOR o SERNANP.
 
