@@ -122,7 +122,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
   padding: 13px 10px 11px; border-bottom: 2px solid transparent;
 }
 .barra nav a:hover { color: var(--barra-ink); }
-.barra nav a[aria-current="location"] { color: var(--barra-ink); border-bottom-color: var(--fire-7); }
+.barra nav a[aria-current="page"] { color: var(--barra-ink); border-bottom-color: var(--fire-7); }
 .barra nav a:focus-visible { outline-color: var(--barra-ink); outline-offset: -4px; }
 .corte-mini { display: inline-flex; gap: 10px; align-items: center; font-size: var(--step--1); color: var(--barra-ink-2); white-space: nowrap; }
 .corte-mini b { color: var(--barra-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -142,14 +142,16 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 0 56px; display: grid; gap: 44px;
 }
-.envoltura > section { scroll-margin-top: 64px; display: grid; gap: 14px; min-width: 0; }
+.tab { display: grid; gap: 44px; min-width: 0; padding-top: 28px; scroll-margin-top: 80px; }
+.tab > section { scroll-margin-top: 64px; display: grid; gap: 14px; min-width: 0; }
+.tab > section:empty { display: none; }
 .sec-cabeza { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 6px 40px; align-items: end; }
 .sec-cabeza > div { display: grid; gap: 4px; }
 .sec-cabeza p { color: var(--ink-2); max-width: 72ch; }
 @media (max-width: 900px) { .sec-cabeza { grid-template-columns: minmax(0, 1fr); } }
 
 /* titular */
-.hero { padding-top: 36px; gap: 18px !important; }
+.hero { padding-top: 8px; gap: 18px !important; }
 .hero-texto { display: grid; gap: 12px; max-width: 1080px; }
 .hero h1 {
   font-size: clamp(1.95rem, 4.1vw, 3.15rem); font-weight: 820; font-stretch: 86%; line-height: 1.03; letter-spacing: -0.014em; max-width: 30ch;
@@ -213,8 +215,9 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 @media (max-width: 900px) { .glosario { grid-template-columns: minmax(0, 1fr); } }
 
 /* atención prioritaria */
-.triage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-@media (max-width: 1000px) { .triage { grid-template-columns: minmax(0, 1fr); } }
+.triage { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1200px) { .triage { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .triage { grid-template-columns: minmax(0, 1fr); } }
 .tri { display: grid; grid-template-rows: auto 1fr; }
 .tri header { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); display: grid; gap: 3px; }
 .tri header p { font-size: var(--step--1); color: var(--ink-3); }
@@ -236,6 +239,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .medidor.crec i { background: var(--fire-24); }
 .medidor.pob i { background: var(--pob); }
 .medidor.anp i { background: var(--anp); }
+.medidor.riesgo i { background: var(--warn); }
 .vacio { padding: 12px 16px; color: var(--ink-3); font-size: var(--step--1); }
 
 /* mapa nacional */
@@ -415,33 +419,90 @@ tbody tr:hover .ir-dep::after, .ir-dep:focus-visible::after { opacity: 1; }
 .contexto td.cifra-of { font-weight: 650; font-variant-numeric: tabular-nums; }
 .ok { color: var(--anp); font-weight: 650; }
 .no { color: var(--warn); font-weight: 650; }
-details.metodo summary { cursor: pointer; padding: 14px 16px; font-family: var(--font-display); font-stretch: 90%; font-weight: 700; font-size: var(--step-1); }
-details.metodo .cuerpo { padding: 0 16px 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px 32px; color: var(--ink-2); }
-details.metodo .cuerpo > div { display: grid; gap: 4px; align-content: start; }
-details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 92%; }
+.metodo .cuerpo { padding: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px 32px; color: var(--ink-2); }
+.metodo .cuerpo > div { display: grid; gap: 4px; align-content: start; }
+.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 92%; }
 .pie { color: var(--ink-3); font-size: var(--step--1); display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 16px; }
 .pie p { max-width: 110ch; }
 .pie strong { color: var(--ink-2); }
+/* pestañas nuevas */
+.cifras-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 900px) { .cifras-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rejilla-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 16px; }
+.rejilla-clima { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 1000px) { .rejilla-clima { grid-template-columns: minmax(0, 1fr); } }
+.tabla-alta { max-height: 560px; overflow-y: auto; }
+.tabla-alta thead th { position: sticky; top: 0; background: var(--panel); z-index: 1; }
+table.sel tbody tr { cursor: pointer; }
+table.sel tbody tr[aria-selected="true"] { background: var(--accent-soft); }
+.semaforo { display: inline-flex; align-items: center; gap: 6px; font-weight: 650; font-size: 0.78rem; }
+.semaforo::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.semaforo.rojo { color: var(--crit); }
+.semaforo.ambar { color: var(--warn); }
+.semaforo.ambar::before { border-radius: 1px; transform: rotate(45deg); width: 8px; height: 8px; }
+.semaforo.verde { color: var(--anp); }
+.semaforo.verde::before { background: transparent; border: 2px solid currentColor; width: 6px; height: 6px; }
+.mini-barra { display: inline-block; width: 56px; height: 6px; background: var(--panel-2); border-radius: 2px; overflow: hidden; vertical-align: 1px; margin-left: 6px; }
+.mini-barra i { display: block; height: 100%; background: var(--warn); }
+.ficha-clima { padding: 16px 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.ficha-clima h3 { font-size: var(--step-2); }
+.rosa { display: flex; gap: 14px; align-items: center; }
+.rosa svg { flex: none; }
+.rosa p { font-size: var(--step--1); color: var(--ink-2); }
+.tabla-calor td { text-align: center; font-weight: 600; }
+.tabla-calor th { text-align: center; }
+.tabla-calor td:first-child, .tabla-calor th:first-child { text-align: left; font-weight: 500; }
+.evid { font-size: 0.72rem; font-weight: 650; border-radius: 3px; padding: 1px 6px; white-space: nowrap; }
+.evid.probable { color: var(--crit); border: 1px solid currentColor; }
+.evid.sin_confirmar { color: var(--ink-3); border: 1px dashed currentColor; }
+.evid.urbano { color: var(--pob); border: 1px dotted currentColor; }
+.controles-plano { border-bottom: 0; padding: 0 0 8px; }
+.creditos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.creditos li { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.creditos .nombre { font-family: var(--font-display); font-stretch: 90%; font-weight: 720; font-size: var(--step-1); line-height: 1.2; }
+.creditos .reto { font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); font-weight: 650; }
+.creditos .aporte { font-size: var(--step--1); color: var(--ink-2); }
+.creditos .enlaces { display: flex; gap: 12px; font-size: var(--step--1); flex-wrap: wrap; }
+.cronologia { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
+.cronologia li { display: grid; grid-template-columns: 4.5em 6.5em minmax(0, 1fr); gap: 2px 12px; padding: 7px 0; border-top: 1px solid var(--line); font-size: var(--step--1); align-items: baseline; }
+.cronologia .fecha { font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.cronologia .ent { color: var(--ink); font-weight: 600; }
+.nivel { font-size: 0.72rem; font-weight: 650; display: inline-flex; gap: 5px; align-items: center; }
+.nivel::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: currentColor; }
+.nivel.Nacional { color: var(--accent); }
+.nivel.Regional { color: var(--warn); }
+.nivel.Local { color: var(--anp); }
+@media (max-width: 640px) { .cronologia li { grid-template-columns: 4.5em minmax(0, 1fr); } .cronologia li .nivel { grid-column: 2; } .cronologia li .txt { grid-column: 1 / -1; } }
+.antig { display: inline-block; height: 6px; background: var(--fire-old); border-radius: 2px; vertical-align: 1px; margin-right: 6px; }
+.verif { font-size: 0.72rem; color: var(--ink-3); }
+.cobertura-ficha { display: grid; gap: 5px; }
+.otros-alumnos { font-size: var(--step--2); color: var(--ink-2); display: grid; gap: 2px; }
+td .lugar { font-weight: 600; }
+td .lugar small { margin-left: 6px; font-weight: 400; color: var(--ink-3); font-size: 0.78rem; }
+#tabla-normas td, #tabla-normas th { text-align: left; white-space: normal; vertical-align: top; }
+#tabla-normas td:first-child { min-width: 260px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
 </style>
 
 <header class="barra">
   <div class="barra-in">
     <a class="marca" href="#resumen">Monitor de Incendios Perú</a>
-    <nav aria-label="Secciones">
-      <a href="#resumen">Resumen</a>
-      <a href="#atencion">Atención prioritaria</a>
-      <a href="#mapa-sec">Mapa</a>
-      <a href="#incendio">Incendio en 3D</a>
-      <a href="#temporada">Temporada</a>
-      <a href="#departamentos">Departamentos</a>
-      <a href="#fuentes">Fuentes y método</a>
+    <nav aria-label="Pestañas del tablero" id="pestanas">
+      <a href="#situacion">Situación</a>
+      <a href="#incendios">Incendios</a>
+      <a href="#clima">Clima y riesgo</a>
+      <a href="#afectados">¿A quién afecta?</a>
+      <a href="#agua">Agua y ecosistemas</a>
+      <a href="#historia">Temporada</a>
+      <a href="#respuesta">Respuesta</a>
+      <a href="#metodo">Método y créditos</a>
     </nav>
     <span class="corte-mini">Corte <b id="corte-barra">—</b> <span class="fresco" id="frescura" data-nivel="ok">—</span></span>
   </div>
 </header>
 
 <main class="envoltura">
+<div class="tab" id="situacion">
   <section id="resumen" class="hero" aria-labelledby="titular">
     <div class="hero-texto">
       <span class="eyebrow">Parte de situación · Incendios forestales · Temporada 2026</span>
@@ -457,7 +518,7 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
     <div class="cifras" id="indicadores"></div>
     <dl class="glosario">
       <div><dt>Foco de calor</dt><dd>píxel de 375 m donde un satélite detectó fuego. Incluye quemas agrícolas y de pastos.</dd></div>
-      <div><dt>Incendio activo</dt><dd>grupo de focos vecinos (a ≤ 1 km y ≤ 48 h entre sí) con al menos un foco en las últimas 24 h.</dd></div>
+      <div><dt>Incendio probable</dt><dd>grupo de 3 o más focos vecinos (a ≤ 1 km y ≤ 48 h), vistos en 2 o más pases y en vegetación natural. «Activo» si tiene un foco en las últimas 24 h.</dd></div>
       <div><dt>Huella</dt><dd>área de los píxeles con fuego. Sirve para comparar incendios; no es el área quemada oficial.</dd></div>
     </dl>
   </section>
@@ -465,15 +526,19 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
   <section id="atencion" aria-labelledby="t-atencion">
     <div class="sec-cabeza">
       <div><span class="eyebrow">Para decidir hoy</span><h2 id="t-atencion">Atención prioritaria</h2></div>
-      <p>Tres lecturas de los incendios con foco en las últimas 24 h: dónde avanza el fuego, dónde hay más gente cerca y qué áreas protegidas están afectadas. Seleccione una fila para ubicarla en el mapa.</p>
+      <p>Cuatro lecturas de los incendios de vegetación probables: dónde avanza el fuego, dónde el clima puede hacerlo crecer, dónde hay más gente cerca y qué áreas protegidas están afectadas. Seleccione una fila para ubicarla en el mapa.</p>
     </div>
     <div class="triage">
       <article class="panel tri" aria-labelledby="t-crec">
         <header><h3 id="t-crec">Se extienden más rápido</h3><p>Huella nueva en las últimas 24 h, en hectáreas</p></header>
         <ol id="tri-crec"></ol>
       </article>
+      <article class="panel tri" aria-labelledby="t-riesgo">
+        <header><h3 id="t-riesgo">Clima a favor del fuego</h3><p>Índice de crecimiento en las próximas 72 h (0–100)</p></header>
+        <ol id="tri-riesgo"></ol>
+      </article>
       <article class="panel tri" aria-labelledby="t-pob">
-        <header><h3 id="t-pob">Más población cerca</h3><p>Habitantes a 5 km o menos; incendios activos con 3 o más focos</p></header>
+        <header><h3 id="t-pob">Más población cerca</h3><p>Habitantes a 5 km o menos; incendios probables activos o en observación</p></header>
         <ol id="tri-pob"></ol>
       </article>
       <article class="panel tri" aria-labelledby="t-anp">
@@ -499,7 +564,7 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
           </div>
           <button type="button" class="boton" id="animar" aria-pressed="false">▶ Animar la temporada</button>
           <div class="casillas">
-            <label><input type="checkbox" id="c-ev" checked> Incendios &gt; 100 ha</label>
+            <label><input type="checkbox" id="c-ev" checked> Incendios probables &gt; 100 ha</label>
             <label><input type="checkbox" id="c-anp" checked> Áreas protegidas</label>
             <label><input type="checkbox" id="c-prov"> Provincias</label>
           </div>
@@ -524,7 +589,9 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
       </aside>
     </div>
   </section>
+</div>
 
+<div class="tab" id="incendios" hidden>
   <section id="incendio" aria-labelledby="t-3d">
     <div class="sec-cabeza">
       <div><span class="eyebrow">Seguimiento de un incendio</span><h2 id="t-3d">El incendio, día por día, sobre el terreno</h2></div>
@@ -570,7 +637,120 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
       </div>
     </div>
   </section>
+  <section id="quemado-sec" aria-labelledby="t-quemado">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Sentinel-2 · 20 m</span><h2 id="t-quemado">Cuánto y qué se quemó</h2></div>
+      <p id="quemado-intro">Área quemada medida con imágenes Sentinel-2 en los incendios con vista 3D. Seleccione una fila para verla en el terreno.</p>
+    </div>
+    <div class="panel">
+      <div class="tabla-caja"><table id="tabla-quemado"></table></div>
+      <p class="pie-tabla" id="quemado-pie"></p>
+    </div>
+    <div class="rejilla-2">
+      <div class="panel grafico" id="g-metodos-caja">
+        <h3 id="t-metodos">La misma cicatriz, medida por distintas personas</h3>
+        <p class="sub">Hectáreas de área quemada según el tablero y según las entregas del curso; cada punto es una medición</p>
+        <div class="clave" id="clave-metodos"></div>
+        <div id="g-metodos"></div>
+      </div>
+      <div class="panel grafico" id="g-cobertura-caja">
+        <h3 id="t-cobertura">Qué se quemó</h3>
+        <p class="sub">Cobertura del suelo dentro del área quemada (ESA WorldCover 2021, 10 m), en hectáreas</p>
+        <div class="clave" id="clave-cobertura"></div>
+        <div id="g-cobertura"></div>
+        <p class="nota-chica" id="nota-cobertura"></p>
+      </div>
+    </div>
+  </section>
+</div>
 
+<div class="tab" id="clima" hidden>
+  <section id="clima-sec" aria-labelledby="t-clima">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Pronóstico a 72 h · Open-Meteo</span><h2 id="t-clima">¿Qué incendios pueden crecer?</h2></div>
+      <p id="clima-intro"></p>
+    </div>
+    <div class="cifras cifras-4" id="clima-cifras"></div>
+    <div class="rejilla-clima">
+      <div class="panel">
+        <div class="controles"><span class="eyebrow">Incendios de vegetación probables, activos o en observación</span></div>
+        <div class="tabla-caja tabla-alta"><table id="tabla-clima"></table></div>
+        <p class="pie-tabla">Índice de crecimiento: percentil 90 del índice de Fosberg (humedad, temperatura y viento) en las próximas 72 h, ajustado por los días seguidos sin lluvia. Rojo ≥ 35, ámbar ≥ 20 (umbrales provisionales). Horas críticas: humedad &lt; 30 %, ráfaga ≥ 30 km/h y sin lluvia en 24 h, a la vez.</p>
+      </div>
+      <aside class="panel ficha-clima" id="ficha-clima" aria-live="polite"></aside>
+    </div>
+  </section>
+</div>
+
+<div class="tab" id="afectados" hidden>
+  <section id="afectados-sec" aria-labelledby="t-afectados">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Personas, viviendas y servicios</span><h2 id="t-afectados">¿A quién afecta?</h2></div>
+      <p id="afectados-intro"></p>
+    </div>
+    <div class="cifras" id="afectados-cifras"></div>
+    <div class="rejilla-2">
+      <div class="panel grafico" id="g-sens-caja">
+        <h3 id="t-sens">La cifra depende de qué se cuenta como incendio</h3>
+        <p class="sub">Personas a cada distancia, sin doble conteo, según la definición de incendio (WorldPop 2026)</p>
+        <div class="tabla-caja"><table id="tabla-sens" class="tabla-calor"></table></div>
+        <p class="nota-chica" id="nota-sens"></p>
+      </div>
+      <div class="panel grafico" id="g-depexp-caja">
+        <h3 id="t-depexp">Departamentos con más población cerca del fuego</h3>
+        <p class="sub">Personas a 5 km o menos de incendios probables activos o en observación, y su peso en el departamento</p>
+        <div id="g-depexp"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="controles"><span class="eyebrow">Por incendio · probables, activos o en observación</span></div>
+      <div class="tabla-caja tabla-alta"><table id="tabla-expo"></table></div>
+      <p class="pie-tabla">Distancias desde los focos de las últimas 72 h. Edificaciones: Google Open Buildings v3 (confianza ≥ 0.75). Salud: establecimientos públicos activos de categoría I-1 a III (RENIPRESS). Centros poblados sin 4G: sin cobertura 4G garantizada de ningún operador (OSIPTEL).</p>
+    </div>
+    <div class="panel">
+      <div class="controles"><span class="eyebrow">Alrededor del área quemada · incendios con imagen Sentinel-2</span></div>
+      <div class="tabla-caja"><table id="tabla-expo-q"></table></div>
+      <p class="pie-tabla">Edificaciones y personas dentro del área quemada y a 100 m, 500 m y 1 km de su borde.</p>
+    </div>
+  </section>
+</div>
+
+<div class="tab" id="agua" hidden>
+  <section id="agua-sec" aria-labelledby="t-agua">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Cabeceras, bofedales, áreas protegidas y bosque</span><h2 id="t-agua">Agua y ecosistemas</h2></div>
+      <p id="agua-intro"></p>
+    </div>
+    <div class="rejilla-2">
+      <div class="panel grafico" id="g-alto-caja">
+        <h3 id="t-alto">Fuego en las cabeceras de cuenca</h3>
+        <p class="sub">Focos S-NPP sobre 3,800 m, del 1 de julio al corte de cada año</p>
+        <div class="clave" id="clave-alto"></div>
+        <div id="g-alto"></div>
+      </div>
+      <div class="panel grafico" id="g-anpser-caja">
+        <h3 id="t-anpser">Fuego dentro de áreas naturales protegidas</h3>
+        <p class="sub">Focos S-NPP dentro de ANP, del 1 de julio al corte de cada año</p>
+        <div id="g-anpser"></div>
+      </div>
+    </div>
+    <div class="rejilla-2">
+      <div class="panel">
+        <div class="controles"><span class="eyebrow">Áreas protegidas con más focos en 2026</span></div>
+        <div class="tabla-caja"><table id="tabla-anp-hist"></table></div>
+        <p class="pie-tabla">Focos S-NPP del 1 de julio al corte, frente al promedio 2012–2025 de la misma ventana.</p>
+      </div>
+      <div class="panel grafico" id="g-mapbiomas-caja">
+        <h3 id="t-mapbiomas">Lo que ya se quemó: 2013–2024</h3>
+        <p class="sub">Área quemada acumulada por departamento, MapBiomas Fuego Perú (Landsat, 30 m)</p>
+        <div id="g-mapbiomas"></div>
+        <p class="nota-chica" id="nota-mapbiomas"></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="tab" id="historia" hidden>
   <section id="temporada" aria-labelledby="t-temp">
     <div class="sec-cabeza">
       <div><span class="eyebrow">Tendencia</span><h2 id="t-temp">La temporada frente a 2012–2025</h2></div>
@@ -592,6 +772,26 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
     </div>
   </section>
 
+  <section id="records-sec" aria-labelledby="t-records">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">¿Año récord?</span><h2 id="t-records">Cada departamento frente a su propia historia</h2></div>
+      <p>Focos S-NPP de 2026 frente a la mediana 2012–2025 de la misma ventana del calendario. Cada punto gris es un año; el naranja, 2026. Un anillo marca récord: 2026 supera todos los años previos.</p>
+    </div>
+    <div class="panel grafico" id="g-strip-caja">
+      <div class="controles controles-plano">
+        <div class="segmentos" role="group" aria-label="Ventana del calendario" id="ventana-rec"></div>
+        <span class="tenue" id="rec-resumen"></span>
+      </div>
+      <div id="g-strip"></div>
+    </div>
+  </section>
+  <section id="comparacion-sec" aria-labelledby="t-comp">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">2024 frente a 2026</span><h2 id="t-comp">¿Por qué 2024 se ve mucho peor?</h2></div>
+      <p id="comp-intro"></p>
+    </div>
+    <div class="rejilla-3" id="comp-paneles"></div>
+  </section>
   <section id="departamentos" aria-labelledby="t-dep">
     <div class="sec-cabeza">
       <div><span class="eyebrow">Por departamento</span><h2 id="t-dep">Departamentos</h2></div>
@@ -625,7 +825,28 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
       <p class="pie-tabla">“vs. 2012–2025”: focos S-NPP de 2026 frente al promedio del mismo periodo en 2012–2025; rojo indica más fuego que lo habitual y azul, menos. “n. d.” cuando el promedio es menor de 30 focos. ANP: focos dentro de áreas naturales protegidas en la temporada.</p>
     </div>
   </section>
+</div>
 
+<div class="tab" id="respuesta" hidden>
+  <section id="acciones-sec" aria-labelledby="t-acciones">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Río Tambo (Satipo, Junín) · 4–21 oct</span><h2 id="t-acciones">Quién hizo qué, día por día</h2></div>
+      <p id="acciones-intro"></p>
+    </div>
+    <div class="panel grafico" id="g-acciones-caja">
+      <div class="clave" id="clave-acciones"></div>
+      <div id="g-acciones"></div>
+      <ol class="cronologia" id="lista-acciones"></ol>
+    </div>
+  </section>
+  <section id="normas-sec" aria-labelledby="t-normas">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Marco normativo</span><h2 id="t-normas">Qué dicen las normas y cuándo se actualizaron</h2></div>
+      <p id="normas-intro"></p>
+    </div>
+    <div class="panel"><div class="tabla-caja"><table id="tabla-normas"></table></div>
+      <p class="pie-tabla" id="normas-pie"></p></div>
+  </section>
   <section id="fuentes" aria-labelledby="t-ctx">
     <div class="sec-cabeza">
       <div><span class="eyebrow">Contexto, fuentes y método</span><h2 id="t-ctx">Cifras oficiales y validación</h2></div>
@@ -643,20 +864,36 @@ details.metodo h4 { color: var(--ink); font-size: var(--step-0); font-stretch: 9
         <p class="nota-chica">VIIRS no detecta de forma confiable incendios de pocas hectáreas, bajo dosel cerrado o cubiertos por nubes.</p>
       </div>
     </div>
-    <details class="panel metodo">
-      <summary>Metodología, fuentes y limitaciones</summary>
-      <div class="cuerpo" id="metodo"></div>
-    </details>
   </section>
+</div>
+
+<div class="tab" id="metodo" hidden>
+  <section id="metodo-sec" aria-labelledby="t-metodo">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Cómo se hizo</span><h2 id="t-metodo">Metodología, fuentes y limitaciones</h2></div>
+      <p>Todo número del tablero sale de un script público del proyecto. Aquí se explica cada cálculo, sus fuentes y lo que no puede decir.</p>
+    </div>
+    <div class="panel metodo"><div class="cuerpo" id="metodo-cuerpo"></div></div>
+  </section>
+  <section id="creditos" aria-labelledby="t-creditos">
+    <div class="sec-cabeza">
+      <div><span class="eyebrow">Construido entre muchos</span><h2 id="t-creditos">Quienes colaboraron</h2></div>
+      <p id="creditos-intro"></p>
+    </div>
+    <ul class="creditos" id="lista-creditos"></ul>
+  </section>
+</div>
 
   <footer class="pie">
     <p><strong>Herramienta independiente</strong> de análisis elaborada con datos públicos. No es un producto oficial del Estado peruano ni reemplaza los reportes del COEN, INDECI, SERFOR o SERNANP.</p>
     <p id="pie-fuentes"></p>
+    <p>Construido con los aportes de 32 alumnas y alumnos del curso de Data Science con Python: <a href="#creditos">quiénes colaboraron</a>.</p>
   </footer>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://unpkg.com/deck.gl@9.0.38/dist.min.js"></script>
+<script src="pestanas.js"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -685,11 +922,19 @@ function rgb(nombre, a = 255) {
   return [c.r, c.g, c.b, a];
 }
 async function json(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }
+// capas que pueden faltar en una actualización parcial: el tablero sigue sin ellas
+const jsonOpcional = url => json(url).catch(err => { console.warn(err.message); return null; });
 function cargarImagen(url) {
   return new Promise((ok, mal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => mal(new Error(url)); i.src = url; });
 }
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const desplazar = id => document.getElementById(id).scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+// lleva a una sección: si está en otra pestaña, primero la muestra
+function desplazar(id) {
+  const n = document.getElementById(id); if (!n) return;
+  const tab = n.closest(".tab");
+  if (tab && tab.hidden) mostrarPestana(tab.id);
+  requestAnimationFrame(() => n.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
+}
 
 const D = {};
 const ESTADO = { "Activo": ["activo", "Activo"], "En observación": ["obs", "En observación"], "Sin actividad reciente": ["calma", "Sin actividad reciente"] };
@@ -699,12 +944,13 @@ const CATEGORIA = { "Reserva Paisajistica": "Reserva Paisajística", "Conservaci
 
 /* ---------------------------------------------------------------- inicio */
 (async function () {
-  const [resumen, series, deps, eventos, focos, depGeo, provGeo, anpGeo, relieve, contexto] = await Promise.all([
+  const [resumen, series, deps, eventos, focos, depGeo, provGeo, anpGeo, relieve, contexto, clima, expo, quemado, historia] = await Promise.all([
     json("data/resumen.json"), json("data/series.json"), json("data/departamentos.json"), json("data/eventos.json"),
     json("data/focos_mapa.json"), json("data/departamentos.geojson"), json("data/provincias.geojson"),
     json("data/anp.geojson"), json("assets/relieve_peru.json"), json("data/contexto.json"),
+    jsonOpcional("data/clima.json"), jsonOpcional("data/exposicion.json"), jsonOpcional("data/quemado.json"), jsonOpcional("data/historia.json"),
   ]);
-  Object.assign(D, { resumen, series, deps, depGeo, provGeo, anpGeo, relieve, contexto });
+  Object.assign(D, { resumen, series, deps, depGeo, provGeo, anpGeo, relieve, contexto, clima, expo, quemado, historia });
   D.eventos = eventos.filas.map(f => Object.fromEntries(eventos.cols.map((c, i) => [c, f[i]])));
   D.evPorId = new Map(D.eventos.map(e => [e.evento, e]));
   D.focos = prepararFocos(focos);
@@ -717,17 +963,15 @@ const CATEGORIA = { "Reserva Paisajistica": "Reserva Paisajística", "Conservaci
   pintarCabecera();
   pintarIndicadores();
   pintarTriage();
+  pintarTriageRiesgo();
   pintarPrioridades();
   pintarTabla();
   pintarContexto();
   pintarMetodo();
-  iniciarMapa();
-  dibujarGraficosTemporada();
-  iniciar3D();
-  iniciarNavegacion();
-  observarTema(() => { actualizarMapa(); dibujarGraficosTemporada(); if (E3.datos) { pintar3D(); dibujarGraficosEvento(); } pintarTabla(); });
+  iniciarPestanas();
+  observarTema(() => { actualizarMapa(); pintarTabla(); redibujarPestana(); if (E3.datos) pintar3D(); });
   let ancho = innerWidth;
-  addEventListener("resize", () => { if (Math.abs(innerWidth - ancho) > 30) { ancho = innerWidth; dibujarGraficosTemporada(); if (E3.datos) dibujarGraficosEvento(); } });
+  addEventListener("resize", () => { if (Math.abs(innerWidth - ancho) > 30) { ancho = innerWidth; redibujarPestana(); } });
 })().catch(err => {
   console.error(err);
   document.querySelector(".envoltura").prepend(el("p", { class: "aviso", text: "No se pudieron cargar los datos del tablero (" + err.message + "). Recargue la página; si el problema sigue, avise a quien mantiene el tablero." }));
@@ -778,7 +1022,7 @@ function pintarCabecera() {
   if (oct.puesto_2026 === 1) $("#titular").replaceChildren("Octubre registra ", el("mark", { text: `más focos de calor que cualquier año desde ${desde}` }));
   else $("#titular").textContent = `Octubre va ${signo(oct.anomalia_pct)} % frente al promedio ${desde}–2025`;
 
-  const grandes = D.eventos.filter(e => e.estado === "Activo").sort((a, b) => b.huella_ha - a.huella_ha).slice(0, 3);
+  const grandes = D.eventos.filter(e => e.estado === "Activo" && e.evidencia === "probable").sort((a, b) => b.huella_ha - a.huella_ha).slice(0, 3);
   const porDep = new Map();
   for (const e of grandes) porDep.set(e.departamento, [...(porDep.get(e.departamento) || []), e.distrito]);
   const partes = [...porDep].map(([dep, ds]) => `${unir(ds)} (${dep})`);
@@ -786,9 +1030,16 @@ function pintarCabecera() {
   const temporada = tem.anomalia_pct < 0
     ? `En cambio, el acumulado desde el 1 de julio va ${fmt.format(-tem.anomalia_pct)} % por debajo del promedio: la temporada llegó tarde y el fuego se concentra ahora.`
     : `El acumulado desde el 1 de julio va ${fmt.format(tem.anomalia_pct)} % por encima del promedio.`;
+  const margen = oct.maximo_previo ? Math.round((oct.anio_2026 / oct.maximo_previo.focos - 1) * 100) : null;
+  const porPoco = oct.puesto_2026 === 1 && margen != null && margen < 10 ? ` Supera por poco a ${oct.maximo_previo.anio}, el récord anterior (${signo(margen)} %).` : "";
+  const sc = D.clima ? D.clima.semaforo : null;
+  const clima = sc ? ((sc.rojo || 0) + (sc.ambar || 0) === 0
+    ? " Las lluvias de esta semana juegan a favor: ningún incendio vigilado tiene clima para crecer en las próximas 72 h."
+    : ` ${fmt.format((sc.rojo || 0) + (sc.ambar || 0))} incendios tienen clima a favor para crecer en las próximas 72 h.`) : "";
   $("#bajada").replaceChildren(
-    el("strong", { text: `${fmt.format(r.eventos_activos_100ha)} incendios activos superan las 100 ha.` }),
-    ` Los más extensos están en ${lugares}. Entre el 1 y el ${+r.ultimo_dia_completo.slice(8)} de octubre los satélites registran ${fmt.format(oct.anomalia_pct)} % más focos que el promedio ${desde}–2025. ${temporada}`);
+    el("strong", { text: `${fmt.format(r.eventos_activos_probables)} incendios de vegetación probables siguen activos; ${fmt.format(r.eventos_activos_100ha)} superan las 100 ha.` }),
+    lugares ? ` Los más extensos están en ${lugares}.` : "",
+    ` Entre el 1 y el ${+r.ultimo_dia_completo.slice(8)} de octubre los satélites registran ${fmt.format(oct.anomalia_pct)} % más focos que el promedio ${desde}–2025.${porPoco} ${temporada}${clima}`);
 }
 
 function microBarras(porAnio, etiqueta) {
@@ -820,8 +1071,8 @@ function pintarIndicadores() {
   const delta = r.focos_24h_previas ? Math.round((r.focos_24h / r.focos_24h_previas - 1) * 100) : null;
   const vacio = () => el("span");
   const tiles = [
-    { cls: "critico", et: "Incendios activos > 100 ha", v: fmt.format(r.eventos_activos_100ha), micro: vacio(),
-      nota: `de ${fmt.format(r.eventos_activos_3focos)} incendios activos con 3 o más focos` },
+    { cls: "critico", et: "Incendios probables activos > 100 ha", v: fmt.format(r.eventos_activos_100ha), micro: vacio(),
+      nota: `de ${fmt.format(r.eventos_activos_probables)} incendios de vegetación probables activos; ${fmt.format(r.eventos_activos - r.eventos_activos_probables)} grupos de focos sueltos o urbanos no se cuentan` },
     { et: "Focos de calor, 24 h", v: fmt.format(r.focos_24h), micro: microLinea(diaria, s.fechas.slice(ini)),
       nota: delta == null ? `${fmt.format(r.focos_7d)} en 7 días` : el("span", { class: "delta" },
         el("b", { text: `${delta > 0 ? "▲" : delta < 0 ? "▼" : "="} ${fmt.format(Math.abs(delta))} %` }),
@@ -832,8 +1083,8 @@ function pintarIndicadores() {
     { et: `Temporada vs. ${desde}–2025`, v: signo(tem.anomalia_pct) + " %",
       micro: microBarras(tem.por_anio, `Focos S-NPP del ${r.ventana_temporada} por año`),
       nota: `${r.ventana_temporada}: puesto ${tem.puesto_2026} de ${tem.anios} años` },
-    { et: "Personas a ≤ 5 km de focos, 24 h", v: fmt1.format(r.poblacion_5km_activos / 1e6) + " M", micro: vacio(),
-      nota: "millones de habitantes expuestos a humo y riesgo cercano (WorldPop 2020)" },
+    { et: "Personas a ≤ 5 km de incendios probables", v: r.poblacion_5km_probables != null ? fmtHab(r.poblacion_5km_probables) : "—", micro: vacio(),
+      nota: r.poblacion_5km_probables != null ? `activos o en observación, sin doble conteo (WorldPop 2026); ${fmtHab(r.poblacion_5km_probables_activos)} junto a los activos de las últimas 24 h` : "" },
     { et: "Áreas protegidas con focos, 7 días", v: fmt.format(r.anp_con_focos_7d), micro: vacio(),
       nota: `${fmt.format(r.focos_anp_7d)} focos dentro de sus límites` },
   ];
@@ -853,15 +1104,16 @@ function filaTriage(i, nombre, lugar, valor, frac, clase, detalle, accion, es3d)
       el("span", { class: "detalle-fila" }, detalle, es3d ? " · " : null, es3d ? el("span", { class: "marca3d", text: "3D" }) : null))));
 }
 function pintarTriage() {
-  const act = D.eventos.filter(e => e.estado === "Activo");
+  const act = D.eventos.filter(e => e.estado === "Activo" && e.evidencia === "probable");
   const irEvento = e => () => { seleccionarEvento(e.evento, true); desplazar("mapa-sec"); };
   const crec = act.filter(e => e.huella_24h_ha > 0).sort((a, b) => b.huella_24h_ha - a.huella_24h_ha || b.focos_24h - a.focos_24h).slice(0, 5);
   const maxC = crec[0]?.huella_24h_ha || 1;
   $("#tri-crec").replaceChildren(...(crec.length ? crec.map((e, i) => filaTriage(i, e.distrito, e.departamento, `+${fmt.format(e.huella_24h_ha)} ha`,
     e.huella_24h_ha / maxC, "crec", `${fmt.format(e.focos_24h)} focos en 24 h · huella total ${fmt.format(e.huella_ha)} ha`, irEvento(e), e.detalle))
-    : [el("li", { class: "vacio", text: "Ningún incendio activo sumó huella nueva en las últimas 24 h." })]));
+    : [el("li", { class: "vacio", text: "Ningún incendio probable activo sumó huella nueva en las últimas 24 h." })]));
 
-  const pob = act.filter(e => e.focos >= 3 && e.poblacion_5km > 0).sort((a, b) => b.poblacion_5km - a.poblacion_5km).slice(0, 5);
+  const pob = D.eventos.filter(e => e.evidencia === "probable" && e.estado !== "Sin actividad reciente" && e.poblacion_5km > 0)
+    .sort((a, b) => b.poblacion_5km - a.poblacion_5km).slice(0, 5);
   const maxP = pob[0]?.poblacion_5km || 1;
   $("#tri-pob").replaceChildren(...pob.map((e, i) => filaTriage(i, e.distrito, e.departamento, `${fmtHab(e.poblacion_5km)} hab.`,
     e.poblacion_5km / maxP, "pob", `${fmt.format(e.huella_ha)} ha · capital más cercana: ${e.capital_cercana} (${fmt1.format(e.dist_capital_km)} km)`, irEvento(e), e.detalle)));
@@ -880,9 +1132,9 @@ function pintarTriage() {
 /* ---------------------------------------------------------------- lista de prioridades */
 const MOTIVOS = [["p_exposicion", "población cercana"], ["p_tamano", "huella grande"], ["p_intensidad", "fuego intenso"], ["p_anp", "área protegida"]];
 function pintarPrioridades() {
-  const todos = D.eventos.filter(e => e.estado === "Activo");
+  const todos = D.eventos.filter(e => e.evidencia === "probable" && e.estado !== "Sin actividad reciente");
   const activos = [...todos].sort((a, b) => b.prioridad - a.prioridad).slice(0, 25);
-  $("#prio-nota").replaceChildren(`Los 25 de mayor prioridad entre ${fmt.format(D.resumen.eventos_activos)} incendios activos. Índice de 0 a 100: actividad, tamaño, intensidad, población a 5 km y áreas protegidas. `,
+  $("#prio-nota").replaceChildren(`Los 25 de mayor prioridad entre ${fmt.format(todos.length)} incendios de vegetación probables activos o en observación. Índice de 0 a 100: actividad, tamaño, intensidad, población a 5 km y áreas protegidas. `,
     el("span", { class: "marca3d", text: "3D" }), " tiene vista en terreno.");
   $("#lista-prio").replaceChildren(...activos.map((e, i) => {
     const motivos = MOTIVOS.filter(([k]) => (e[k] || 0) >= 0.6).sort((a, b) => e[b[0]] - e[a[0]]).slice(0, 2).map(m => m[1]);
@@ -896,7 +1148,9 @@ function pintarPrioridades() {
           el("span", { text: `${fmt.format(e.huella_ha)} ha` }),
           e.huella_24h_ha > 0 ? el("span", { class: "crece", text: `+${fmt.format(e.huella_24h_ha)} ha en 24 h` }) : null,
           el("span", { text: `${fmtHab(e.poblacion_5km || 0)} hab. a 5 km` }),
-          el("span", { text: `${fmt1.format(Math.max(e.duracion_dias, 0.1))} días` })),
+          el("span", { text: `${fmt1.format(Math.max(e.duracion_dias, 0.1))} días` }),
+          e.estado !== "Activo" ? pill(e.estado) : null,
+          e.semaforo && e.semaforo !== "verde" ? sem(e.semaforo) : null),
         motivos.length || anp ? el("span", { class: "motivo", text: [motivos.length ? "Pesa: " + motivos.join(", ") : null, anp].filter(Boolean).join(" · ") }) : null));
     return el("li", {}, b);
   }));
@@ -973,7 +1227,7 @@ function pintarLeyenda(enAnim, hMax) {
     filas.push(fila(el("span", { class: "punto", style: "background:var(--fire-24)" }), "Focos de las últimas 24 h", n24));
     if (hMax > 24) filas.push(fila(el("span", { class: "punto", style: "background:var(--fire-7)" }), "De 1 a 7 días", n7));
     if (hMax > 168) filas.push(fila(el("span", { class: "punto", style: "background:var(--fire-old)" }), "De más de 7 días", nV));
-    if ($("#c-ev").checked) filas.push(fila(el("span", { class: "anillo" }), "Incendio activo > 100 ha", D.resumen.eventos_activos_100ha));
+    if ($("#c-ev").checked) filas.push(fila(el("span", { class: "anillo" }), "Incendio probable activo > 100 ha", D.resumen.eventos_activos_100ha));
   }
   if ($("#c-anp").checked) filas.push(fila(el("span", { class: "cuadro-anp" }), "Área natural protegida"));
   $("#leyenda-mapa").replaceChildren(...filas);
@@ -1012,7 +1266,7 @@ function actualizarMapa() {
     }),
     !enAnim && new deck.ScatterplotLayer({
       id: "eventos", visible: $("#c-ev").checked,
-      data: D.eventos.filter(e => e.estado === "Activo" && (e.huella_ha >= 100 || e.evento === M.sel)),
+      data: D.eventos.filter(e => (e.estado === "Activo" && e.evidencia === "probable" && e.huella_ha >= 100) || e.evento === M.sel),
       getPosition: e => [e.lon, e.lat], radiusUnits: "meters",
       getRadius: e => Math.sqrt(e.huella_ha * 1e4 / Math.PI) * 1.25, radiusMinPixels: 7, filled: false, stroked: true,
       getLineColor: e => (e.evento === M.sel ? rgb("--accent") : rgb("--crit")), lineWidthUnits: "pixels",
@@ -1044,7 +1298,7 @@ function tooltipMapa({ object, layer }) {
   }
   if (layer.id === "eventos") {
     const e = object;
-    return { html: `<b>${esc(e.distrito)}</b> · ${esc(e.provincia)}, ${esc(e.departamento)}<br>${esc(e.estado)} · prioridad ${e.prioridad} de 100<br>Huella ${fmt.format(e.huella_ha)} ha${e.huella_24h_ha > 0 ? ` (+${fmt.format(e.huella_24h_ha)} ha en 24 h)` : ""}<br>${fmt.format(e.focos)} focos en ${fmt1.format(e.duracion_dias)} días · desde el ${fechaHora(e.inicio)}<br>${fmt.format(e.poblacion_5km || 0)} habitantes a 5 km${e.anp ? "<br>Dentro de: " + esc(e.anp) : ""}`, style: estilo };
+    return { html: `<b>${esc(e.distrito)}</b> · ${esc(e.provincia)}, ${esc(e.departamento)}<br>${esc(e.estado)} · ${esc(NOMBRE_EVID[e.evidencia] || "")} · prioridad ${e.prioridad} de 100<br>Huella ${fmt.format(e.huella_ha)} ha${e.huella_24h_ha > 0 ? ` (+${fmt.format(e.huella_24h_ha)} ha en 24 h)` : ""}<br>${fmt.format(e.focos)} focos en ${fmt1.format(e.duracion_dias)} días · desde el ${fechaHora(e.inicio)}<br>${fmt.format(e.poblacion_5km || 0)} habitantes a 5 km${e.anp ? "<br>Dentro de: " + esc(e.anp) : ""}`, style: estilo };
   }
   if (layer.id === "anp") {
     const p = object.properties;
@@ -1094,7 +1348,9 @@ function seleccionarEvento(id, volar) {
       transitionDuration: reduceMotion ? 0 : 1200, transitionInterpolator: new deck.FlyToInterpolator() } });
   }
   actualizarMapa();
-  if (e.detalle && E3.id !== id) { $("#sel-evento").value = id; cargarEvento3D(id); }
+  if (e.detalle && E3.id !== id) {
+    if (E3.deck) { $("#sel-evento").value = id; cargarEvento3D(id); } else E3.pendiente = id;  // la vista 3D se crea al abrir su pestaña
+  }
 }
 
 /* ---------------------------------------------------------------- vista 3D */
@@ -1126,8 +1382,10 @@ function iniciar3D() {
     },
   });
   // por defecto, el incendio activo más extenso (el que mejor muestra el avance sobre el relieve)
-  const primero = [...lista].sort((a, b) => (b.estado === "Activo") - (a.estado === "Activo") || b.huella_ha - a.huella_ha)[0];
-  if (primero) { sel.value = primero.evento; cargarEvento3D(primero.evento); }
+  // por defecto, el de mayor área quemada medida (el que mejor muestra la cicatriz sobre el relieve)
+  const medidos = (D.quemado?.filas || []).filter(f => f.medido).sort((a, b) => b.total_ha - a.total_ha);
+  const primero = E3.pendiente || medidos[0]?.evento || [...lista].sort((a, b) => b.huella_ha - a.huella_ha)[0]?.evento;
+  if (primero) { sel.value = primero; cargarEvento3D(primero); }
 }
 function orientarBrujula(bearing) {
   $("#brujula svg").style.transform = `rotate(${-bearing}deg)`;
@@ -1314,7 +1572,9 @@ function pintarFicha() {
       el("span", { class: "nota-chica", text: `Sentinel-2 del ${fechaCorta(sev.pre)} frente al ${fechaCorta(sev.post)}. ` +
         `El ${fmt.format(sev.focos_antes_dentro_pct)} % de los focos detectados hasta esa imagen cae dentro del área quemada.` +
         (sev.focos_despues > 0 ? ` ${fmt.format(sev.focos_despues)} focos son posteriores a la imagen: el área quemada actual puede ser mayor.` : "") +
-        (sev.pct_sin_dato > 5 ? ` ${fmt.format(sev.pct_sin_dato)} % del entorno sin dato por nubes o humo.` : "") }));
+        (sev.pct_sin_dato > 5 ? ` ${fmt.format(sev.pct_sin_dato)} % del entorno sin dato por nubes o humo.` : "") +
+        (sev.ha_027 != null ? ` Con un solo umbral (dNBR ≥ 0.27) serían ${fmt.format(sev.ha_027)} ha.` : "") }),
+      ...fichaQuemadoExtra(E3.id, sev));
   } else {
     $("#ficha-sev").replaceChildren(el("span", { class: "nota-chica", text: d.sentinel.previa_al_fuego
       ? `La imagen Sentinel-2 despejada más reciente (${fechaCorta(d.sentinel.post)}) es anterior al primer foco: todavía no hay una imagen que muestre el área quemada.`
@@ -1325,6 +1585,28 @@ function pintarFicha() {
   const s2 = d.sentinel;
   $("#ficha-img").textContent = s2.post ? `Imagen Sentinel-2 L2A del ${fechaCorta(s2.post)} (Copernicus, vía Microsoft Planetary Computer). En la vista infrarroja, la vegetación se ve verde y el área quemada, rojo oscuro. Relieve: AWS Terrain Tiles; exageración vertical ×${fmt1.format(E3.exag)}.`
     : `Sin imagen Sentinel-2 despejada posterior al inicio; se muestra el relieve. Exageración vertical ×${fmt1.format(E3.exag)}.`;
+}
+// qué se quemó, qué hay alrededor y qué midieron los alumnos para este mismo incendio
+function fichaQuemadoExtra(id, sev) {
+  const out = [];
+  if (sev.cobertura?.length) {
+    const total = Math.max(1, sev.total_ha);
+    out.push(el("span", { class: "eyebrow", text: "Qué se quemó (WorldCover 10 m)" }),
+      el("div", { class: "barra-sev", role: "img", "aria-label": sev.cobertura.map(c => `${c.clase}: ${fmt.format(c.ha)} ha`).join(", ") },
+        ...sev.cobertura.map(c => el("span", { style: `width:${c.ha / total * 100}%;background:${COLORES_COB[c.clase] || COLORES_COB.Otros}`, title: `${c.clase}: ${fmt.format(c.ha)} ha` }))),
+      el("div", { class: "sev-leyenda" }, ...sev.cobertura.slice(0, 4).map(c => el("span", {}, el("i", { style: "background:" + (COLORES_COB[c.clase] || COLORES_COB.Otros) }),
+        `${c.clase} ${fmt.format(c.ha / total * 100)} % (${fmt.format(c.pct_entorno)} % del entorno)`))));
+  }
+  const f = D.quemado?.filas.find(x => x.evento === id);
+  if (f?.exposicion) {
+    const x = f.exposicion;
+    out.push(el("span", { class: "nota-chica", text: `Edificaciones: ${fmt.format(x.edif_dentro)} dentro del área quemada, ${fmt.format(x.edif_100m)} a ≤ 100 m y ${fmt.format(x.edif_1km)} a ≤ 1 km del borde. Personas a ≤ 1 km: ${fmt.format(x.pob_1km)}.` }));
+  }
+  if (f?.alumnos?.length) {
+    out.push(el("div", { class: "otros-alumnos" }, el("span", { class: "eyebrow", text: "Otras mediciones de este incendio" }),
+      ...f.alumnos.map(a => el("span", {}, el("b", { text: `${fmt.format(a.ha)} ha` }), ` · ${a.alumno}: ${a.metodo}`))));
+  }
+  return out;
 }
 function actualizarFichaDia() {
   const d = E3.datos; if (!d) return;
@@ -1533,7 +1815,7 @@ function pintarTabla() {
     const lim = D.limDep.get(f.departamento);
     return el("tr", {},
       el("td", {}, el("button", { type: "button", class: "ir-dep", text: f.departamento, title: `Ver ${f.departamento} en el mapa`,
-        onclick: () => { if (lim) { M.sel = null; M.anpSel = null; marcarLista(); irA(lim, 9); actualizarMapa(); desplazar("mapa-sec"); } } })),
+        onclick: () => { if (lim) { desplazar("mapa-sec"); M.sel = null; M.anpSel = null; marcarLista(); irA(lim, 9); actualizarMapa(); } } })),
       n(f.focos_24h, "sep"),
       el("td", {}, el("span", { class: "c-barra" }, el("span", { text: fmt.format(f.focos_7d) }),
         el("span", { class: "bb" }, el("i", { style: `width:${(f.focos_7d / max7 * 100).toFixed(1)}%` })))),
@@ -1559,15 +1841,52 @@ function pintarContexto() {
 }
 function pintarMetodo() {
   const m = D.contexto.metodo;
-  $("#metodo").replaceChildren(...m.map(b => el("div", {}, el("h4", { text: b.titulo }), ...b.parrafos.map(p => el("p", { text: p })))));
+  $("#metodo-cuerpo").replaceChildren(...m.map(b => el("div", {}, el("h4", { text: b.titulo }), ...b.parrafos.map(p => el("p", { text: p })))));
   $("#pie-fuentes").textContent = D.contexto.fuentes;
 }
-function iniciarNavegacion() {
-  const enlaces = [...document.querySelectorAll(".barra nav a")];
-  const secciones = enlaces.map(a => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
-  const marcar = id => { for (const a of enlaces) { if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current"); } };
-  const obs = new IntersectionObserver(entradas => { for (const en of entradas) if (en.isIntersecting) marcar(en.target.id); },
-    { rootMargin: "-30% 0px -60% 0px" });
-  secciones.forEach(s => obs.observe(s));
+/* ---------------------------------------------------------------- pestañas */
+// iniciar: la primera vez que se muestra (los mapas y gráficos necesitan su ancho real); dibujar: cada vez y al cambiar tema o ancho
+const PESTANAS = {
+  situacion: { iniciar: () => iniciarMapa() },
+  incendios: { iniciar: () => { iniciar3D(); pintarQuemado(); },
+    dibujar: () => { if (E3.datos) dibujarGraficosEvento(); dibujarMetodos(); dibujarCobertura(); } },
+  clima: { iniciar: () => pintarClima(), dibujar: () => { if (C.sel && D.clima) dibujarSerieClima(D.clima.series[C.sel]); } },
+  afectados: { iniciar: () => pintarAfectados(), dibujar: () => dibujarDepExp() },
+  agua: { iniciar: () => pintarAgua(), dibujar: () => dibujarAgua() },
+  historia: { iniciar: () => pintarRecords(), dibujar: () => { dibujarGraficosTemporada(); dibujarStrip(); pintarComparacion(); } },
+  respuesta: { iniciar: () => { pintarAcciones(); pintarNormas(); }, dibujar: () => dibujarAcciones() },
+  metodo: { iniciar: () => pintarCreditos() },
+};
+const P = { actual: null, iniciadas: new Set() };
+function mostrarPestana(id) {
+  const tab = document.getElementById(id);
+  if (!tab || !tab.classList.contains("tab")) return;
+  for (const t of document.querySelectorAll("main > .tab")) t.hidden = t !== tab;
+  for (const a of document.querySelectorAll("#pestanas a")) {
+    if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  }
+  P.actual = id;
+  const def = PESTANAS[id] || {};
+  if (!P.iniciadas.has(id)) { P.iniciadas.add(id); def.iniciar?.(); }
+  def.dibujar?.();
+  try { history.replaceState(null, "", "#" + id); } catch (e) { /* algunos visores no lo permiten */ }
+}
+function redibujarPestana() { (PESTANAS[P.actual] || {}).dibujar?.(); }
+function iniciarPestanas() {
+  $("#pestanas").addEventListener("click", ev => {
+    const a = ev.target.closest("a"); if (!a) return;
+    ev.preventDefault();
+    mostrarPestana(a.getAttribute("href").slice(1));
+    scrollTo({ top: 0, behavior: "auto" });
+  });
+  const desdeHash = () => {
+    const h = decodeURIComponent(location.hash.slice(1));
+    const n = h && document.getElementById(h);
+    const tab = n ? (n.classList.contains("tab") ? n : n.closest(".tab")) : null;
+    mostrarPestana(tab ? tab.id : "situacion");
+    if (n && n !== tab) requestAnimationFrame(() => n.scrollIntoView({ block: "start" }));
+  };
+  addEventListener("hashchange", desdeHash);
+  desdeHash();
 }
 </script>

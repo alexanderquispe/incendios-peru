@@ -1,0 +1,147 @@
+{
+ "nota": "Cifras de área quemada que midieron alumnos del curso (sesión 14) para los mismos incendios, con su método. Sirven para ver cuánto pesa cada decisión; no se promedian.",
+ "incendios": {
+  "Chichas": [
+   {
+    "alumno": "Gabriela Pozo",
+    "ha": 1689.5,
+    "metodo": "dNBR ≥ 0.10 en la envolvente de focos + 1 km; imágenes 15→20 oct"
+   },
+   {
+    "alumno": "Cristian Moises Wong Pagan",
+    "ha": 1647,
+    "metodo": "dNBR ≥ 0.10 a ≤ 750 m de focos; 15→20 oct"
+   },
+   {
+    "alumno": "Mirian de la Cruz Condori",
+    "ha": 1495.6,
+    "metodo": "dNBR ≥ 0.10, parches a ≤ 750 m de focos; 13→20 oct, misma órbita"
+   },
+   {
+    "alumno": "Luis Guevara Vega",
+    "ha": 1475,
+    "metodo": "umbral dNBR adaptativo, sembrado con focos"
+   },
+   {
+    "alumno": "Fabricio Luna Palacios",
+    "ha": 400,
+    "metodo": "dNBR ≥ 0.27 menos la mediana, unión 17–20 oct, solo el distrito de Chichas"
+   }
+  ],
+  "Río Tambo": [
+   {
+    "alumno": "Noelia Fernanda Leon Ruiz",
+    "ha": 3266,
+    "metodo": "dNBR ≥ 0.27 sobre compuestos píxel a píxel; 1,729 ha sin ver"
+   },
+   {
+    "alumno": "Luis Guevara Vega",
+    "ha": 2695,
+    "metodo": "umbral dNBR adaptativo, sembrado con focos"
+   },
+   {
+    "alumno": "Josué Soria",
+    "ha": 1433,
+    "metodo": "mínimo; 56 % con nubes"
+   },
+   {
+    "alumno": "Alessandra Valeria Murga Rimac",
+    "ha": 176,
+    "metodo": "dNBR ≥ 0.27 sembrado; 13→20 oct; solo 41 % medible"
+   },
+   {
+    "alumno": "COEN-INDECI (21 oct)",
+    "ha": 1320,
+    "metodo": "reporte oficial: 1,200 ha de cobertura natural y 120 ha de cultivos",
+    "oficial": true
+   }
+  ],
+  "Manantay": [
+   {
+    "alumno": "Alexander Noblejas",
+    "ha": 892,
+    "metodo": "dNBR ≥ 0.27; 21 set → 16 oct"
+   },
+   {
+    "alumno": "Fiorella del Rocío Becerril Mercado",
+    "ha": 883,
+    "metodo": "dNBR ≥ 0.27 en la envolvente + 2 km, sin siembra; 21 set → 16 oct"
+   }
+  ],
+  "Curahuasi": [
+   {
+    "alumno": "Josué Soria",
+    "ha": 4574,
+    "metodo": "dNBR ≥ 0.10 contiguo (1,677 ha con ≥ 0.27)"
+   },
+   {
+    "alumno": "Amanda Gomez",
+    "ha": 1946,
+    "metodo": "dNBR"
+   },
+   {
+    "alumno": "Estefanny Mejía",
+    "ha": 1115,
+    "metodo": "dNBR"
+   },
+   {
+    "alumno": "Fiorella Ampuero",
+    "ha": 500,
+    "metodo": "dNBR ≥ 0.27 a ≤ 1 km; imagen previa del 13 oct, ya con fuego: solo el incremento 13→18 oct"
+   }
+  ],
+  "Huanoquite": [
+   {
+    "alumno": "Greicy Rodriguez",
+    "ha": 895,
+    "metodo": "dNBR ≥ 0.10 conectado a focos (409 ha con ≥ 0.27)"
+   },
+   {
+    "alumno": "Oscar Andres Chávez Inocente",
+    "ha": 442,
+    "metodo": "dNBR"
+   }
+  ],
+  "Livitaca": [
+   {
+    "alumno": "Greicy Rodriguez",
+    "ha": 929,
+    "metodo": "dNBR ≥ 0.10 conectado a focos (425 ha con ≥ 0.27)"
+   },
+   {
+    "alumno": "COEN-INDECI",
+    "ha": 200,
+    "metodo": "reporte oficial N.º 14391",
+    "oficial": true
+   }
+  ],
+  "Limatambo": [
+   {
+    "alumno": "Jhanela Carhuaz Fuster",
+    "ha": 845,
+    "metodo": "dNBR ≥ 0.10 (332 ha con ≥ 0.27)"
+   }
+  ],
+  "Nueva Requena": [
+   {
+    "alumno": "Adriana Garcés",
+    "ha": 166,
+    "metodo": "dNBR ≥ 0.10 (115 ha con ≥ 0.27)"
+   }
+  ],
+  "San Cristóbal": [
+   {
+    "alumno": "Gabriela Pozo",
+    "ha": 609.9,
+    "metodo": "dNBR ≥ 0.10 en la envolvente + 1 km"
+   }
+  ],
+  "Mazamari": [
+   {
+    "alumno": "Ricardo Antonio Macedo Villegas",
+    "ha": 112,
+    "metodo": "dNBR sin restar el desfase de Sentinel-2: subestima"
+   }
+  ]
+ }
+}

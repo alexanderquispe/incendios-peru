@@ -85,7 +85,8 @@ def main():
                 "por_anio": {str(k): int(v) for k, v in s.items()}}
 
     activos = ev[ev.estado == "Activo"]
-    pob_activos = poblacion_union(f24.lon.values, f24.lat.values) if len(f24) else 0
+    prob = activos[activos.evidencia == "probable"]
+    expo = json.load(open(PRO / "exposicion_resumen.json")) if (PRO / "exposicion_resumen.json").exists() else None
 
     anp7 = f7[f7.anp_nombre.notna()]
     regiones7 = f7.region.value_counts(normalize=True).mul(100).round(0)
@@ -100,11 +101,17 @@ def main():
         "focos_24h": int(len(f24)), "focos_24h_previas": int(len(f48) - len(f24)),
         "focos_7d": int(len(f7)), "focos_temporada": int(len(temporada)),
         "eventos_activos": int(len(activos)),
-        "eventos_activos_100ha": int((activos.huella_ha >= 100).sum()),
+        "eventos_activos_probables": int(len(prob)),
+        "eventos_activos_100ha": int((prob.huella_ha >= 100).sum()),
         "eventos_activos_3focos": int((activos.focos >= 3).sum()),
+        "eventos_activos_evidencia": {k: int(v) for k, v in activos.evidencia.value_counts().items()},
         "eventos_observacion": int((ev.estado == "En observación").sum()),
+        "eventos_observacion_probables": int(((ev.estado == "En observación") & (ev.evidencia == "probable")).sum()),
         "eventos_temporada_sig": int(ev.significativo.sum()),
-        "poblacion_5km_activos": round(pob_activos, -2),
+        "eventos_temporada_probables": int((ev.evidencia == "probable").sum()),
+        "poblacion_5km_probables": expo["sensibilidad"]["probables"]["5km"] if expo else None,
+        "poblacion_5km_probables_activos": expo["sensibilidad"]["probables_activos"]["5km"] if expo else None,
+        "poblacion_5km_todos": expo["sensibilidad"]["todos"]["5km"] if expo else None,
         "focos_anp_7d": int(len(anp7)), "anp_con_focos_7d": int(anp7.anp_nombre.nunique()),
         "anp_7d": [{"anp": k, "focos": int(v)} for k, v in anp7.anp_nombre.value_counts().head(8).items()],
         "region_7d_pct": {k: int(v) for k, v in regiones7.items()},
@@ -208,8 +215,8 @@ def main():
             "huella_24h_ha", "frp_total", "frp_max",
             "elev_min", "elev_med", "elev_max", "pendiente_med", "region", "cobertura", "pct_bosque",
             "anp", "anp_admin", "focos_en_anp", "anp_cercana", "dist_anp_km", "capital_cercana",
-            "dist_capital_km", "poblacion_5km", "prioridad", "p_actividad", "p_tamano", "p_intensidad",
-            "p_exposicion", "p_anp", "lat", "lon"]
+            "dist_capital_km", "poblacion_1km", "poblacion_5km", "prioridad", "p_actividad", "p_tamano", "p_intensidad",
+            "p_exposicion", "p_anp", "lat", "lon", "evidencia", "pases", "satelites", "pct_veg_natural", "fuente_fija"]
     # eventos para el tablero: activos o en observación, y los de la temporada con ≥ 10 focos o en ANP
     filtro = ev.significativo & ((ev.estado != "Sin actividad reciente") | (ev.focos >= 10) | ev.anp.notna())
     e = ev[filtro].sort_values("prioridad", ascending=False)[cols].copy()
@@ -217,8 +224,79 @@ def main():
     e["huella_ha"] = e.huella_ha.round(0)
     e["frp_total"] = e.frp_total.round(0)
     e["detalle"] = e.evento.isin(sel)
+    # clima y exposición de los incendios activos o en observación probables (09_clima, 10_exposicion)
+    if (INT / "clima_riesgo.parquet").exists():
+        cr = pd.read_parquet(INT / "clima_riesgo.parquet")
+        cc = ["ic", "semaforo", "dias_secos", "lluvia_72h_mm", "lluvia_7d_previa_mm", "hr_min_72h", "racha_max_72h", "t_max_72h",
+              "horas_criticas_72h", "avance_24h_km", "avance_72h_km", "rumbo_24h", "pob_corredor_24h", "pob_corredor_72h"]
+        e = e.merge(cr[["evento"] + cc], on="evento", how="left")
+    if (PRO / "exposicion_incendios.parquet").exists():
+        ex = pd.read_parquet(PRO / "exposicion_incendios.parquet")
+        ce = ["pob_1km", "pob_2km", "pob_10km", "edif_1km", "edif_2km", "edif_5km", "salud_5km", "salud_mas_cercano_km",
+              "ccpp_5km", "ccpp_sin_4g_5km"]
+        e = e.merge(ex[["evento"] + [c for c in ce if c in ex]], on="evento", how="left")
     guardar("eventos.json", {"cols": list(e.columns),
                              "filas": [[limpio(v) for v in fila] for fila in e.itertuples(index=False)]})
+
+    # ------------------------------------------------------------ clima: series diarias y corredores
+    if (INT / "clima_riesgo.parquet").exists():
+        cd = pd.read_parquet(INT / "clima_diario.parquet")
+        cd = cd[cd.fecha >= hoy - pd.Timedelta(days=7)]
+        series_c = {}
+        for eid, g in cd.groupby("evento"):
+            g = g.sort_values("fecha")
+            series_c[eid] = {"fecha": g.fecha.dt.strftime("%Y-%m-%d").tolist(), "ffwi": g.ffwi_max.round(1).tolist(),
+                             "lluvia": g.lluvia_mm.round(1).tolist(), "hr_min": g.hr_min.round(0).tolist(),
+                             "racha": g.racha_max_kmh.round(0).tolist(), "t_max": g.t_max.round(1).tolist(),
+                             "horas_criticas": g.horas_criticas.astype(int).tolist()}
+        ruta = lambda v: [[float(p[0]), float(p[1])] for p in v]
+        rutas = {r.evento: {"r24": ruta(r.ruta_24h), "r72": ruta(r.ruta_72h), "a24": int(r.ancho_24h_m), "a72": int(r.ancho_72h_m)}
+                 for r in cr.itertuples()}
+        guardar("clima.json", {"hoy": hoy.strftime("%Y-%m-%d"), "umbrales": {"rojo": 35, "ambar": 20},
+                               "series": series_c, "rutas": rutas,
+                               "semaforo": cr.semaforo.value_counts().to_dict(),
+                               "lluvia_72h_mediana": round(float(cr.lluvia_72h_mm.median()), 1)})
+
+    # ------------------------------------------------------------ exposición
+    if expo:
+        ex = pd.read_parquet(PRO / "exposicion_incendios.parquet")
+        cerca = {r.evento: [dict(x) for x in r.salud_cercanos] for r in ex.itertuples()
+                 if isinstance(r.salud_cercanos, (list, np.ndarray)) and len(r.salud_cercanos)}
+        guardar("exposicion.json", {**expo, "salud_cercanos": cerca})
+
+    # ------------------------------------------------------------ área quemada (Sentinel-2) de los incendios con 3D
+    alumnos = json.load(open(RAIZ / "data" / "curso" / "cifras_alumnos.json"))
+    eq = pd.read_parquet(PRO / "exposicion_quemado.parquet").set_index("evento") if (PRO / "exposicion_quemado.parquet").exists() else pd.DataFrame()
+    filas_q = []
+    for eid in sel:
+        ruta = OUT / "eventos" / f"{eid}.json"
+        if not ruta.exists():
+            continue
+        d = json.load(open(ruta))
+        r = ev.set_index("evento").loc[eid]
+        sev = d.get("severidad")
+        fila = {"evento": eid, "distrito": r.distrito, "provincia": r.provincia, "departamento": r.departamento,
+                "region": r.region, "estado": r.estado, "huella_ha": round(float(r.huella_ha)), "focos": int(r.focos),
+                "inicio": r.inicio.strftime("%Y-%m-%d"), "ultimo": r.ultimo.strftime("%Y-%m-%d"),
+                "sentinel": d["sentinel"], "medido": bool(sev)}
+        if sev:
+            fila.update({k: sev.get(k) for k in ("total_ha", "ha_027", "pct_sin_dato", "focos_antes_dentro_pct", "focos_despues",
+                                                   "fuego_activo", "clases", "cobertura", "pre", "post")})
+        if eid in eq.index:
+            fila["exposicion"] = {k: int(v) for k, v in eq.loc[eid].items()}
+        filas_q.append(fila)
+    # las mediciones de los alumnos van al incendio del distrito con más focos (el que estudiaron)
+    principal = {}
+    for f in filas_q:
+        if f["focos"] > principal.get(f["distrito"], {"focos": -1})["focos"]:
+            principal[f["distrito"]] = f
+    for f in filas_q:
+        f["alumnos"] = alumnos["incendios"].get(f["distrito"]) if principal[f["distrito"]] is f else None
+    guardar("quemado.json", {"nota_alumnos": alumnos["nota"], "filas": filas_q})
+
+    # ------------------------------------------------------------ historia (11_historia) y créditos
+    if (PRO / "historia.json").exists():
+        guardar("historia.json", json.load(open(PRO / "historia.json")))
 
     # ------------------------------------------------------------ límites simplificados
     def poligonal(geom):

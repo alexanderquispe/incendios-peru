@@ -64,6 +64,15 @@
    }
   },
   {
+   "indicador": "Incendio de Río Tambo (Satipo, Junín), al 21 oct",
+   "cifra": "1,200 ha de cobertura natural y 120 ha de cultivos",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct, 17:05 h)",
+   "enlace": {
+    "nombre": "Copia del reporte",
+    "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf"
+   }
+  },
+  {
    "indicador": "Referencia 2024 (año récord)",
    "cifra": "1,754 incendios, 63,710 ha, 35 fallecidos",
    "fuente": "INDECI, vía Andina (25 nov 2024)",
@@ -82,7 +91,7 @@
     "url": "https://andina.pe/agencia/noticia-indeci-siete-nuevos-incendios-forestales-se-iniciaron-distritos-cinco-regiones-1095820.aspx"
    },
    "detectado": true,
-   "detalle": "390 focos entre el 13 y el 16 oct; huella de 2,067 ha, a 8.7 km de la Reserva Comunal Asháninka. Sigue activo."
+   "detalle": "345 focos entre el 13 y el 17 oct; huella de 2,081 ha, a 8.7 km de la Reserva Comunal Asháninka. Sentinel-2 mide al menos 392 ha con el 55 % del entorno bajo nubes."
   },
   {
    "incendio": "Parque Nacional Huascarán, sector Llanganuco (Yungay, Áncash)",
@@ -125,24 +134,692 @@
    "detalle": "Sin focos en el santuario esas fechas. Un incendio de 2 ha bajo dosel queda por debajo de lo que VIIRS detecta de forma confiable."
   }
  ],
+ "acciones": [
+  {
+   "fecha": "2026-10-04",
+   "nivel": "Local",
+   "entidad": "Comunidad nativa Tsyapo",
+   "tipo": "Inicio del incendio",
+   "accion": "Empieza el incendio en la comunidad nativa de Tsyapo; los pobladores lo combaten con herramientas manuales",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-05",
+   "nivel": "Local",
+   "entidad": "Municipalidad de Río Tambo",
+   "tipo": "Evaluación",
+   "accion": "Evaluación de Daños y Análisis de Necesidades (EDAN)",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-06",
+   "nivel": "Nacional",
+   "entidad": "Ejército (31.ª Brigada de Infantería)",
+   "tipo": "Medios aéreos",
+   "accion": "Vuelo en helicóptero para llevar personal del Cuerpo General de Bomberos (CGBVP)",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-06",
+   "nivel": "Nacional",
+   "entidad": "CGBVP",
+   "tipo": "Bomberos",
+   "accion": "Control y extinción; traslado de heridos por quemaduras al Centro de Salud de Río Tambo",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-07",
+   "nivel": "Local",
+   "entidad": "CGBVP (Compañía de Oxapampa)",
+   "tipo": "Bomberos",
+   "accion": "Bomberos de Oxapampa trabajan en el control del incendio desde el miércoles 7",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-07",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Avión L-100 lleva el sistema contraincendios a Mazamari; nueve descargas de agua",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-08",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Helicóptero MI-17 reanuda las descargas con helibalde en Cutivireni",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-08",
+   "nivel": "Regional",
+   "entidad": "Gobierno Regional de Junín",
+   "tipo": "Bomberos",
+   "accion": "Coordina rehidratantes y el despliegue de más bomberos del CGBVP",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-09",
+   "nivel": "Nacional",
+   "entidad": "INDECI (Dirección Desconcentrada Junín)",
+   "tipo": "Coordinación",
+   "accion": "Gestiona equipos especializados, cuadrillas de bomberos forestales y medios aéreos; articula la declaratoria de estado de emergencia",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-10",
+   "nivel": "Local",
+   "entidad": "Municipalidad de Río Tambo",
+   "tipo": "Brigadas comunales",
+   "accion": "250 brigadistas comunales abren cortafuegos hacia Cutivireni, Cobeja, Alto Cobeja y otras comunidades",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-10",
+   "nivel": "Regional",
+   "entidad": "Gobierno Regional de Junín",
+   "tipo": "Bomberos",
+   "accion": "Ómnibus para llevar bomberos de Huancayo y Pucallpa a Mazamari, y víveres",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-10",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Helicóptero MI-17: extinción, ayuda humanitaria y evacuación de bomberos en Tsyapo",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-11",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Helicóptero MI-17 lleva helibalde, ayuda humanitaria, autoridades y brigadistas",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-13",
+   "nivel": "Nacional",
+   "entidad": "Subprefectura de Satipo (MININTER)",
+   "tipo": "Alerta",
+   "accion": "Por agotamiento extremo e inhalación de humo ya no hay brigadistas externos ni bomberos en la zona; quedan 10 efectivos del Ejército",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-14",
+   "nivel": "Regional",
+   "entidad": "Gobierno Regional de Junín",
+   "tipo": "Ayuda humanitaria",
+   "accion": "Entrega herramientas, techo, abrigo, enseres y alimentos desde el almacén de Satipo; pide a INDECI 400 aguas y 400 kits de alimentos; gestiona bomberos y su traslado aéreo desde Pucallpa",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-14",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea y Ejército (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Cuatro vuelos de helicóptero desde Mazamari: reconocimiento, extinción y ayuda humanitaria a Tincareni y Alto Cobeja",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-14",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF), según la Municipalidad de Río Tambo",
+   "tipo": "Medios aéreos",
+   "accion": "Se reinicia el combate aéreo de la FAP con Bambi Bucket; ayuda humanitaria a la comunidad de Timboreni",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-15",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Helicóptero MI-17 apoya la extinción en Cutivireni, Tincareni y Alto Cobeja",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-16",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea y Ejército (MINDEF)",
+   "tipo": "Medios aéreos",
+   "accion": "Dos vuelos MI-17 con personal y equipo; el avión FAP-305 lleva personal, equipo y herramientas de bomberos de Jauja a Mazamari",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-16",
+   "nivel": "Nacional",
+   "entidad": "INDECI (Dirección Desconcentrada Junín)",
+   "tipo": "Evaluación",
+   "accion": "Vuelo de reconocimiento: aún hay focos de calor",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-18",
+   "nivel": "Nacional",
+   "entidad": "Fuerza Aérea (MINDEF)",
+   "tipo": "Bomberos",
+   "accion": "Avión C-27J Spartan lleva bomberos de Lima (vía Chiclayo y Trujillo) a Mazamari; helicóptero MI-171 apoya la extinción en Tinkareni",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-18",
+   "nivel": "Nacional",
+   "entidad": "MIDIS (Juntos y País)",
+   "tipo": "Programas sociales",
+   "accion": "Pide el padrón de damnificados; identifica 4 hogares usuarios de Juntos que perdieron cultivos de cacao y yuca en Cobeja",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-19",
+   "nivel": "Nacional",
+   "entidad": "Ejército (31.ª Brigada de Infantería)",
+   "tipo": "Respuesta en terreno",
+   "accion": "La Compañía de Intervención Rápida para Desastres sigue con el control y la extinción",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-20",
+   "nivel": "Regional",
+   "entidad": "Gobierno Regional de Junín",
+   "tipo": "Ayuda humanitaria",
+   "accion": "Kits de alimentos, agua, ayuda complementaria y 80 equipos de protección personal para la Central Asháninka del Río Ene (CARE)",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-20",
+   "nivel": "Local",
+   "entidad": "Municipalidad de Río Tambo, bomberos forestales, Ejército, SERNANP y comuneros",
+   "tipo": "Respuesta en terreno",
+   "accion": "Controlan el fuego en la cabecera de Tincareni; la emergencia sigue activa porque las llamas avanzan hacia otras comunidades",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-20",
+   "nivel": "Nacional",
+   "entidad": "PROVRAEM",
+   "tipo": "Ayuda humanitaria",
+   "accion": "Alimentos para brigadistas, bomberos forestales, Ejército y pobladores",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  },
+  {
+   "fecha": "2026-10-21",
+   "nivel": "Nacional",
+   "entidad": "INDECI (Dirección Desconcentrada Junín)",
+   "tipo": "Ayuda humanitaria",
+   "accion": "Entrega 1 000 canastas de víveres y 800 unidades de agua a la Municipalidad de Río Tambo",
+   "fuente": "COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026, 17:05 h)",
+   "url": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf",
+   "recopilado_por": "Noelia Fernanda Leon Ruiz"
+  }
+ ],
+ "normas": {
+  "recopilado_por": "Ivette Mamani Flores",
+  "revisado": "2026-10-22",
+  "normas": [
+   {
+    "norma": "Plan Multisectorial ante Incendios Forestales 2025–2027",
+    "dispositivo": "D. S. 010-2025-PCM; actualizado por el D. S. 069-2026-PCM",
+    "entidad": "PCM",
+    "aprobada": "2025-01-21",
+    "actualizada": "2026-05-10",
+    "estado": "Vigente, actualizado",
+    "que_hace": "Coordina a los ministerios en los distritos priorizados por riesgo de incendio; la actualización de 2026 cambia esos distritos y fija metas e inversiones del año.",
+    "urls": [
+     "https://busquedas.elperuano.pe/dispositivo/NL/2363797-1",
+     "https://busquedas.elperuano.pe/dispositivo/NL/2513809-1"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Política Nacional de Gestión del Riesgo de Desastres al 2050",
+    "dispositivo": "D. S. 038-2021-PCM",
+    "entidad": "PCM",
+    "aprobada": "2021-03-01",
+    "actualizada": "2021-03-01",
+    "estado": "Vigente",
+    "que_hace": "Marco de todos los planes de gestión del riesgo, incluido el de incendios forestales.",
+    "urls": [
+     "https://dimse.cenepred.gob.pe/simse/cenepred/docs/DS_038_2021_PCM_POLITICA_NACIONAL_DEL_RIESGO_DESASTRES_AL_2050.pdf"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Plan Nacional de Gestión del Riesgo de Desastres (PLANAGERD) 2022–2030",
+    "dispositivo": "D. S. 115-2022-PCM",
+    "entidad": "PCM",
+    "aprobada": "2022-09-13",
+    "actualizada": "2022-09-13",
+    "estado": "Vigente",
+    "que_hace": "Lleva la política de riesgo a acciones multisectoriales; el plan de incendios se apoya en él.",
+    "urls": [
+     "https://busquedas.elperuano.pe/dispositivo/NL/2104793-1"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Plan de Prevención y Reducción de Riesgos de Incendios Forestales 2019–2022",
+    "dispositivo": "RDE 284-2018-MINAGRI-SERFOR-DE",
+    "entidad": "SERFOR",
+    "aprobada": "2018-12-17",
+    "actualizada": "2018-12-17",
+    "estado": "Vencido en 2022",
+    "que_hace": "Plan del sector forestal para prevenir incendios. No se encontró un plan que lo reemplace (por confirmar con SERFOR).",
+    "urls": [
+     "https://sinia.minam.gob.pe/sites/default/files/siar-puno/archivos/public/docs/plan-de-prevencion-y-reduccion-de-riesgos-de-incendios-forestales.pdf"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Ley Forestal y de Fauna Silvestre",
+    "dispositivo": "Ley 29763; modificada por la Ley 31973",
+    "entidad": "Congreso",
+    "aprobada": "2011-07",
+    "actualizada": "2024-01",
+    "estado": "Vigente",
+    "que_hace": "Regula el uso de los bosques; la Ley 31973 cambió la zonificación forestal.",
+    "urls": [
+     "https://sinia.minam.gob.pe/normas/ley-que-modifica-ley-29763-ley-forestal-fauna-silvestre-aprueba"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Política Nacional Forestal y de Fauna Silvestre",
+    "dispositivo": "D. S. 009-2013-MINAGRI",
+    "entidad": "MIDAGRI / SERFOR",
+    "aprobada": "2013",
+    "actualizada": "2013",
+    "estado": "Vigente; su versión al 2030 sigue como proyecto (RM 0010-2024-MIDAGRI)",
+    "que_hace": "Orienta la gestión de los bosques; es la base del plan de prevención del SERFOR.",
+    "urls": [
+     "https://busquedas.elperuano.pe/dispositivo/NL/2255312-1"
+    ],
+    "verificado": true
+   },
+   {
+    "norma": "Política Nacional Agraria 2021–2030",
+    "dispositivo": "D. S. 017-2021-MIDAGRI",
+    "entidad": "MIDAGRI",
+    "aprobada": "2021-07",
+    "actualizada": "2021-07",
+    "estado": "Vigente",
+    "que_hace": "Principal política del agro; importa porque la quema de residuos agrícolas y de pastos es la causa más común de los incendios.",
+    "urls": [
+     "https://leap.unep.org/en/countries/pe/national-legislation/decreto-supremo-no-017-2021-minagri-politica-nacional-agraria"
+    ],
+    "verificado": false
+   },
+   {
+    "norma": "Ley de prevención y lucha contra los incendios forestales",
+    "dispositivo": "Proyectos 3636, 6348, 6556 y otros",
+    "entidad": "Congreso",
+    "aprobada": "2025-09-10",
+    "actualizada": "2025-09-10",
+    "estado": "Dictamen aprobado en comisión; no publicada como ley",
+    "que_hace": "Propone reglas de prevención y respuesta y prohíbe cambiar el uso de tierras forestales quemadas.",
+    "urls": [
+     "https://comunicaciones.congreso.gob.pe/noticias/aprueban-dictamen-que-propone-una-ley-para-la-prevencion-y-lucha-contra-los-incendios-forestales/"
+    ],
+    "verificado": false
+   }
+  ]
+ },
+ "creditos": {
+  "curso": "Data Science con Python, sesión 14: Incendios en el Perú",
+  "issue": "https://github.com/d2cml-ai/Data-Science-Python/issues/194",
+  "alumnos": [
+   {
+    "nombre": "Adriana Garcés",
+    "github": "dgarcesg",
+    "reto": "¿Qué incendios pueden crecer?",
+    "aporte": "Índice Hot-Dry-Windy calibrado con los días de mayor crecimiento de cada incendio.",
+    "repo": null,
+    "web": "https://claude.ai/artifact/9tFKVaMvGQn7bmdstXvPv7"
+   },
+   {
+    "nombre": "Alessandra Valeria Murga Rimac",
+    "github": "ValMur123",
+    "reto": "Cuánto y qué se perdió",
+    "aporte": "Río Tambo: el par de imágenes correcto (13→20 oct) y el bosque quemado que conserva NBR alto.",
+    "repo": "https://github.com/ValMur123/tarea_clase_python_intermedio",
+    "web": "https://claude.ai/artifact/MfN95PoJdLzJ4YYLgk9fWf"
+   },
+   {
+    "nombre": "Alexander Noblejas",
+    "github": "AlexNoblejas",
+    "reto": "Cuánto, qué y a quién",
+    "aporte": "Ventana de los últimos 10 días frente a 14 años; distinguir foco, huella, área quemada y cifra oficial.",
+    "repo": "https://github.com/AlexNoblejas/incendios-peru",
+    "web": "https://claude.ai/artifact/Vcm1kaLfwJ7CWDfgCm5DL6"
+   },
+   {
+    "nombre": "Amanda Gomez",
+    "github": "av-gomez",
+    "reto": "Dónde intervenir primero",
+    "aporte": "Banderas de falsos positivos (fuentes fijas, suelo desnudo, zonas urbanas) y ranking con clima.",
+    "repo": "https://github.com/av-gomez/incendios-peru-2026",
+    "web": "https://claude.ai/artifact/9q2KEBDdQXhE21xEBv8tFs"
+   },
+   {
+    "nombre": "Ana Karen Zamalloa Lima",
+    "github": "anakaren-zl",
+    "reto": "¿A quién afecta?",
+    "aporte": "Escuelas (ESCALE) y comunidades nativas (BDPI) cerca del fuego en Satipo y Atalaya.",
+    "repo": "https://github.com/anakaren-zl/data-science-python-2026/tree/tarea-3-incendios/tarea_3",
+    "web": "https://claude.ai/artifact/6oRiGEDFVQkkU915gMmWQ9"
+   },
+   {
+    "nombre": "Cristian Moises Wong Pagan",
+    "github": "Cris92W",
+    "reto": "Cuánto se quemó",
+    "aporte": "Chichas: el par de imágenes 15→20 oct y la progresión de la cicatriz entre fechas.",
+    "repo": "https://github.com/Cris92W/Python-Intermedio/tree/main/PRACTICA_1",
+    "web": "https://claude.ai/artifact/GrgeJNJdqtggyNVSFus5bd"
+   },
+   {
+    "nombre": "Diego Enrique Sime Rendón",
+    "github": "diegosimemirror",
+    "reto": "¿A quién afecta?",
+    "aporte": "Filtro de incendio forestal probable; red pública de salud (RENIPRESS) y cobertura 4G (OSIPTEL).",
+    "repo": "https://github.com/diegosimemirror/incendios-2026",
+    "web": "https://claude.ai/artifact/2fVRwcStbC5LgvMmfuYn8h"
+   },
+   {
+    "nombre": "Estefanny Mejía",
+    "github": "estefmej",
+    "reto": "Fuego y agua",
+    "aporte": "Fuego sobre las zonas que producen agua: cabeceras, lagunas y humedales altoandinos.",
+    "repo": "https://github.com/estefmej/fuego-y-agua",
+    "web": "https://claude.ai/artifact/JBcENF72uSqPRxWqHQZJdH"
+   },
+   {
+    "nombre": "Fabricio Luna Palacios",
+    "github": "FaLuna22",
+    "reto": "Cuánto y qué se quemó",
+    "aporte": "Máscara de nieve y controles independientes (MODIS, Landsat, historia 2001–2025) en Chichas.",
+    "repo": "https://github.com/FaLuna22/Data-Science-Python/tree/tarea-07-raster-chichas/tareas/07-raster-incendio-chichas",
+    "web": "https://claude.ai/artifact/NXRDkAuH4CX1zoPpuQupMW"
+   },
+   {
+    "nombre": "Fiorella del Rocío Becerril Mercado",
+    "github": "rociobecerril",
+    "reto": "Cuánto se quemó y ¿año récord?",
+    "aporte": "Manantay con dNBR; tabla de imágenes candidatas con su nubosidad; récord por departamento.",
+    "repo": "https://github.com/rociobecerril/incendios-manantay",
+    "web": "https://claude.ai/artifact/NewzNeqZtuesPQhQusbTas"
+   },
+   {
+    "nombre": "Fiorella Ampuero",
+    "github": "fampueroc",
+    "reto": "Cuánto se quemó",
+    "aporte": "Curahuasi: su análisis mostró que la imagen previa debe ser anterior al primer foco; validación inversa con focos.",
+    "repo": "https://github.com/fampueroc/Data-Science-Python/tree/main/proyecto-incendios",
+    "web": "https://claude.ai/artifact/M7iaz5VmfuUDevcHxfHxvE"
+   },
+   {
+    "nombre": "Flavia Romero Piedra",
+    "github": "FlaviaRomero",
+    "reto": "¿Qué se quemó?",
+    "aporte": "Área quemada 2013–2024 por departamento de MapBiomas Fuego Perú.",
+    "repo": "https://github.com/FlaviaRomero/area_quemada",
+    "web": "https://claude.ai/artifact/P4n1ugoJ1qfa7DBNG58dpL"
+   },
+   {
+    "nombre": "Frank Pinares Gutiérrez",
+    "github": "saffron29",
+    "reto": "¿Año récord?",
+    "aporte": "Detectó los focos duplicados de INPE en octubre; gráfico «cada departamento contra su propia historia».",
+    "repo": "https://github.com/saffron29/incendios-record",
+    "web": "https://claude.ai/artifact/JJfs57at9hKTUzPtNrbB9v"
+   },
+   {
+    "nombre": "Gabriela Pozo",
+    "github": "gabriela-pozo",
+    "reto": "¿Qué se quemó?",
+    "aporte": "Cobertura dentro del área quemada y registro de lo que las nubes no dejan medir; Chichas en 1,690 ha.",
+    "repo": "https://github.com/gabriela-pozo/incendios-peru",
+    "web": "https://claude.ai/artifact/S4zrK3HQHXbqCssKv7oFuZ"
+   },
+   {
+    "nombre": "Greicy Rodriguez",
+    "github": "grey-d18",
+    "reto": "¿A quién afecta?",
+    "aporte": "Rango de umbral 0.10–0.27 en la puna; franjas dentro, 100 m, 500 m y 1 km; cifra oficial junto a la satelital.",
+    "repo": "https://github.com/grey-d18/grey_diplomado/tree/main/tarea_raster",
+    "web": "https://claude.ai/artifact/AYzseMtXY9JuCKQfBvsJpc"
+   },
+   {
+    "nombre": "Hideki Harada",
+    "github": "haradaoyakawahideki",
+    "reto": "¿Año récord?",
+    "aporte": "Lluvia ERA5 y récord en Río Tambo; altitud de los focos frente al territorio.",
+    "repo": "https://github.com/haradaoyakawahideki/Python/tree/tarea-incendios-2026/Ejercicio",
+    "web": "https://haradaoyakawahideki.github.io/Python/"
+   },
+   {
+    "nombre": "Isabella Albarrán Chávez",
+    "github": "isabellaach",
+    "reto": "Clima, viento y evacuación",
+    "aporte": "Corredor del viento y población que debe prepararse en 24–72 h.",
+    "repo": "https://github.com/isabellaach/python-qlab/tree/main/tarea_data_raster",
+    "web": "https://claude.ai/artifact/B6Xd7Qk5C5pGghCu1tjt68"
+   },
+   {
+    "nombre": "Ivette Mamani Flores",
+    "github": "IvettexMamani",
+    "reto": "Informe y normas",
+    "aporte": "Marco normativo con la antigüedad de cada norma.",
+    "repo": "https://github.com/IvettexMamani/Focos_calor_Peru.git",
+    "web": "https://claude.ai/artifact/QPrUTk5QRi733F78JCNy58"
+   },
+   {
+    "nombre": "Jhanela Carhuaz Fuster",
+    "github": "Jhane080",
+    "reto": "Clima y riesgo",
+    "aporte": "Sequía antecedente (días seguidos sin lluvia) en el riesgo de crecimiento; Limatambo.",
+    "repo": "https://github.com/Jhane080/incendios-cusco",
+    "web": "https://jhane080.github.io/incendios-cusco/"
+   },
+   {
+    "nombre": "Jose Navarro",
+    "github": "bocchienjoyer",
+    "reto": "Clima y agricultura",
+    "aporte": "Regla de horas críticas en una misma hora y consulta por lotes a Open-Meteo.",
+    "repo": "https://github.com/bocchienjoyer/incendios-peru-clima-riesgo",
+    "web": "https://peru-fuego-agricultura.fancyperch2.chatgpt.site/"
+   },
+   {
+    "nombre": "Josselin Yauri Condor",
+    "github": "jyauric",
+    "reto": "¿A quién afecta?",
+    "aporte": "Porcentaje de la población de cada departamento expuesta y sensibilidad a la definición de incendio.",
+    "repo": "https://github.com/jyauric/python-actividades/tree/main/tarea_clase",
+    "web": "https://claude.ai/artifact/FsUArWidgW7rQUXxHBmVVU"
+   },
+   {
+    "nombre": "Josué Soria",
+    "github": "josuesoriavas",
+    "reto": "¿Qué se quemó?",
+    "aporte": "Mostró que WorldCover casi no ve la agricultura: 23 % de los focos cae en superficie agrícola MIDAGRI y 1.9 % en «cultivo».",
+    "repo": "https://github.com/josuesoriavas/incendios-cultivos-peru",
+    "web": "https://claude.ai/artifact/8o1axzxDUpRPo4XTg8w33y"
+   },
+   {
+    "nombre": "Lory Acosta",
+    "github": "loryac21-cyber",
+    "reto": "Cuánto, qué y riesgo posterior",
+    "aporte": "Riesgo de huaycos sobre el área quemada con las lluvias; seguimiento de Puno.",
+    "repo": "https://github.com/loryac21-cyber/Tarea-clase5.git",
+    "web": "https://claude.ai/artifact/93ZFZ9VvHi846WxrUx2Bkw"
+   },
+   {
+    "nombre": "Luis Guevara Vega",
+    "github": "LuisGuevaraVega",
+    "reto": "Cuánto, qué y edificaciones",
+    "aporte": "Umbral dNBR adaptativo y exposición de cada edificación en Chichas y Río Tambo.",
+    "repo": "https://github.com/LuisGuevaraVega/incendios-peru",
+    "web": "https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL"
+   },
+   {
+    "nombre": "Mirian de la Cruz Condori",
+    "github": "miriandelacon13-ux",
+    "reto": "¿Qué se quemó?",
+    "aporte": "Chichas y Toro con control de calidad de imágenes; el pastizal es el 37 % del entorno pero el 70 % de lo quemado.",
+    "repo": "https://github.com/miriandelacon13-ux/Incendios-Peru",
+    "web": "https://incendios-peru-gm37htuzfqhgvnscpmmtu3.streamlit.app/"
+   },
+   {
+    "nombre": "Noelia Fernanda Leon Ruiz",
+    "github": "NoeliaLRuiz",
+    "reto": "¿Qué se quemó? y respuesta",
+    "aporte": "Línea de tiempo de 27 acciones del Estado en Río Tambo, tomadas del reporte del COEN; distancia a bomberos.",
+    "repo": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/tree/main/pr%C3%A1ctica",
+    "web": "https://claude.ai/artifact/BSAToTnPS8ZYmMs1Fh2xDH"
+   },
+   {
+    "nombre": "Oscar Andres Chávez Inocente",
+    "github": "O-Chavx",
+    "reto": "Cuánto, qué y a quién",
+    "aporte": "Huanoquite: población contada desde el área quemada y no desde los focos.",
+    "repo": "https://github.com/O-Chavx/incendio",
+    "web": "https://claude.ai/artifact/KsGmZoWnaTNaMmSRJyaM9S"
+   },
+   {
+    "nombre": "Ricardo Antonio Macedo Villegas",
+    "github": "AntonioMacedo17",
+    "reto": "¿A quién afecta?",
+    "aporte": "Población por distrito y cómo cambia según qué se considera incendio.",
+    "repo": "https://github.com/AntonioMacedo17/Python_Intermedio_2026/tree/main/tarea_3_1",
+    "web": "https://claude.ai/artifact/T85MK16ZAznqAeJEJFXoon"
+   },
+   {
+    "nombre": "Roddy Huarhua",
+    "github": "roddyhuarhua-hub",
+    "reto": "¿A quién afecta?",
+    "aporte": "Edificaciones dentro y cerca del borde del área quemada Sentinel-2.",
+    "repo": "https://github.com/roddyhuarhua-hub/Data-Science-Python/tree/incendios-open-buildings/tarea_incendios",
+    "web": "https://claude.ai/artifact/LDS3s7zx2CybxJ9RFKy4No"
+   },
+   {
+    "nombre": "Rodrigo Norabuena",
+    "github": "rodnm",
+    "reto": "¿A quién afecta?",
+    "aporte": "Filtro de quemas urbanas y fuentes fijas; población y edificaciones a 1, 2, 5 y 10 km sin doble conteo; consulta de Google Open Buildings y WorldPop 2026.",
+    "repo": "https://github.com/rodnm/mapa-incendios-peru-2026",
+    "web": "https://claude.ai/artifact/L7bWfwPE94wdHdTsXhLNcy"
+   },
+   {
+    "nombre": "Víctor Guardia",
+    "github": "vguardiaf",
+    "reto": "¿Año récord?",
+    "aporte": "Récords por departamento y la lectura «temporada baja, octubre alto».",
+    "repo": "https://github.com/vguardiaf/qlabpucp_python_intermedio",
+    "web": "https://claude.ai/artifact/X8oDTiZ6w59yggsH36ptFu"
+   },
+   {
+    "nombre": "Ximena Pinillos Zegarra",
+    "github": "ximenapize",
+    "reto": "Cuánto se quemó y a quién afecta",
+    "aporte": "Área quemada sembrada con focos en la selva; porcentaje sin dato como dato obligatorio; techos por distancia.",
+    "repo": "https://github.com/ximenapize/python-qlab/tree/main/tarea_raster",
+    "web": "https://ximenapize.github.io/python-qlab/tarea_raster/docs/"
+   }
+  ]
+ },
  "metodo": [
   {
    "titulo": "Focos de calor",
    "parrafos": [
-    "Un foco de calor es un píxel de 375 m en el que el sensor VIIRS registró una anomalía térmica compatible con fuego. Se usan los tres satélites con VIIRS (S-NPP, NOAA-20 y NOAA-21), que pasan sobre el Perú varias veces al día, de día y de noche. Un foco no equivale a un incendio forestal: también aparecen quemas agrícolas y de pastos. Las nubes y el humo denso pueden ocultar el fuego.",
-    "Datos de 2025-06 a la fecha: INPE (Brasil), programa Queimadas, archivo mensual de focos de Sudamérica, filtrado al Perú. Los pases posteriores al último dato de INPE vienen de NASA FIRMS (tiempo casi real).",
+    "Un foco de calor es un píxel de 375 m en el que el sensor VIIRS registró una anomalía térmica compatible con fuego. Se usan los tres satélites con VIIRS (S-NPP, NOAA-20 y NOAA-21), que pasan sobre el Perú varias veces al día, de día y de noche. Un foco no equivale a un incendio forestal: también aparecen quemas agrícolas, de pastos y fuentes urbanas o industriales. Las nubes y el humo denso pueden ocultar el fuego.",
+    "Datos de 2025-06 a la fecha: INPE (Brasil), programa Queimadas, archivo mensual de focos de Sudamérica, filtrado al Perú. Los pases posteriores al último dato de INPE vienen de NASA FIRMS (tiempo casi real). Desde el 13 oct 2026 INPE repite focos (mismo satélite, hora y posición con otro identificador); se deja uno. Lo detectó Frank Pinares en el curso.",
     "Serie histórica 2012–2025: NASA FIRMS, archivo estándar VIIRS S-NPP del Perú, solo focos de vegetación. Antes de unir las dos fuentes se compararon mes a mes en julio–octubre de 2025: la diferencia entre INPE y FIRMS fue de entre -1.4 % y +0.9 %.",
     "Se excluyen fuentes de calor permanentes (volcanes como Sabancaya y Ubinas, antorchas de gas e industrias): focos a menos de 500 m de detecciones que FIRMS clasifica como volcán u otra fuente estática entre 2012 y 2025. Solo se conservan focos dentro de los límites distritales del INEI."
    ]
   },
   {
-   "titulo": "Incendios (eventos)",
+   "titulo": "Incendios y evidencia",
    "parrafos": [
-    "Los focos se agrupan en eventos: dos focos pertenecen al mismo incendio si están a 1 km o menos y a 48 horas o menos entre sí, directamente o a través de otros focos. Estado: «Activo» si el último foco tiene menos de 24 horas; «En observación» entre 24 y 72 horas; «Sin actividad reciente» después. Un incendio puede seguir activo bajo nubes sin ser visto.",
-    "Huella VIIRS: superficie de las celdas de 375 m con al menos un foco. Sirve para comparar tamaños entre incendios, pero no es el área quemada oficial: sobrestima los incendios pequeños (cada foco cuenta 14 ha) y subestima los que quedan bajo nubes.",
-    "Área quemada (Sentinel-2): diferencia del índice normalizado de quemado (dNBR, bandas B8A y B12) entre la imagen despejada más reciente antes del inicio y la más reciente después, con máscara de nubes, sombras y agua. Se parte de los píxeles con dNBR de 0.27 o más a 750 m o menos de un foco y se suman los píxeles contiguos con dNBR de 0.10 o más y NBR posterior de 0.10 o menos (suelo carbonizado), hasta 3 km de los focos. Clases de severidad de Key y Benson (USGS). Si la imagen es anterior al primer foco, no se estima.",
-    "En la vista 3D, la línea blanca es el borde del área quemada que muestra la imagen Sentinel-2 y la línea punteada, la zona a 250 m o menos de los focos VIIRS acumulados hasta el día elegido. No coinciden, y es esperable: VIIRS solo observa el fuego en sus pases de alrededor de la 01:30 y las 13:30 h, con píxeles de 375 m, y entre un pase y otro el frente puede quemar grandes extensiones de pajonal sin ser detectado.",
-    "Avance máximo del frente: distancia máxima entre un foco nuevo del día y el foco previo más cercano del mismo incendio."
+    "Los focos se agrupan en incendios: dos focos pertenecen al mismo si están a 1 km o menos y a 48 horas o menos entre sí, directamente o a través de otros focos. Estado: «Activo» si el último foco tiene menos de 24 horas; «En observación» entre 24 y 72 horas; «Sin actividad reciente» después.",
+    "Evidencia (adaptado de Diego Sime y Rodrigo Norabuena): «incendio de vegetación probable» si tiene 3 o más focos, vistos en 2 o más pases satelitales, y al menos la mitad en vegetación natural según WorldCover. «Posible quema urbana o fuente fija» si hay 5,000 personas o más a 1 km, si la mitad de los focos cae en zona urbana o suelo desnudo, o si son 1 o 2 focos en un punto que ardió en 5 días o más de los 180 previos. El resto queda «sin confirmar». Las cifras principales usan solo los incendios probables: un foco suelto en una ciudad sumaba antes cientos de miles de personas «cerca del fuego».",
+    "Huella VIIRS: superficie de las celdas de 375 m con al menos un foco. Sirve para comparar tamaños entre incendios, pero no es el área quemada: sobrestima los incendios pequeños (cada foco cuenta 14 ha) y subestima los que quedan bajo nubes."
+   ]
+  },
+  {
+   "titulo": "Área quemada y qué se quemó (Sentinel-2)",
+   "parrafos": [
+    "Diferencia del índice normalizado de quemado (dNBR, bandas B8A y B12) entre una imagen anterior al primer foco y la primera imagen despejada después del último foco (o la más reciente si aún no hay), comparando la hora de la toma con la del foco. En la selva, los huecos por nubes se completan píxel a píxel con las tomas siguientes. Se enmascaran nubes, sombras, agua y nieve (con 60 m de borde).",
+    "Se parte de los píxeles con dNBR de 0.27 o más a 750 m o menos de un foco y se suman los contiguos con dNBR de 0.10 o más y NBR posterior de 0.10 o menos (suelo carbonizado), hasta 3 km de los focos. Se informa también el área con dNBR de 0.27 o más: en la puna el pajonal arde con dNBR bajo y la diferencia entre umbrales es grande (Chichas: 1,736 frente a 219 ha). Clases de severidad de Key y Benson (USGS).",
+    "Qué se quemó: ESA WorldCover 2021 a 10 m dentro del área quemada, por clase de severidad. WorldCover casi no distingue chacras: Josué Soria mostró que el 23 % de los focos cae en la Superficie Agrícola Nacional 2024 del MIDAGRI y solo el 1.9 % en «cultivo» de WorldCover.",
+    "En la vista 3D, la línea blanca es el borde del área quemada y la línea punteada, la zona a 250 m o menos de los focos VIIRS acumulados hasta el día elegido. No coinciden: VIIRS solo observa el fuego hacia la 01:30 y las 13:30 h, con píxeles de 375 m, y entre pases el frente puede avanzar sin ser visto."
+   ]
+  },
+  {
+   "titulo": "¿A quién afecta?",
+   "parrafos": [
+    "Población: WorldPop 2026 a 100 m, restringida a zonas con edificaciones. Se cuentan las celdas a 1, 2, 5 y 10 km de los focos de las últimas 72 h, sin doble conteo entre focos ni entre incendios. Edificaciones: Google Open Buildings v3 con confianza de 0.75 o más (copia GeoParquet de VIDA). Salud: establecimientos públicos activos con categoría I-1 a III del RENIPRESS (SUSALUD). Conectividad: centros poblados con o sin cobertura 4G garantizada (OSIPTEL).",
+    "En los incendios con área quemada Sentinel-2 se cuentan edificaciones y personas dentro y a 100 m, 500 m y 1 km del borde (Roddy Huarhua, Greicy Rodriguez).",
+    "La cifra depende mucho de la definición: el tablero muestra cómo cambia según el radio y según qué se considera incendio (Josselin Yauri, Ricardo Macedo)."
+   ]
+  },
+  {
+   "titulo": "Clima y riesgo de crecimiento",
+   "parrafos": [
+    "Open-Meteo (modelo de mejor ajuste, sin clave): tiempo horario de los 14 días previos y los 7 siguientes en el centro de los focos recientes de cada incendio.",
+    "Índice de crecimiento = percentil 90 del índice de Fosberg (FFWI: humedad, temperatura y viento) de las próximas 72 h × (0.5 + 0.5 × días seguidos sin lluvia / 14). El FFWI vale 0 si llovió 2 mm o más en las 24 h previas. Rojo desde 35 y ámbar desde 20 (umbrales provisionales, por calibrar). Horas críticas: humedad menor de 30 %, ráfaga de 30 km/h o más y sin lluvia en 24 h, en una misma hora (Jose Navarro).",
+    "Corredor del viento (Isabella Albarrán): el frente avanza cada hora hacia donde sopla el viento, a 0.10 × velocidad × sequedad, se detiene con lluvia y tiene un tope de 15 km. Es una guía para anticipar, no una predicción del frente."
    ]
   },
   {
@@ -153,21 +830,22 @@
    ]
   },
   {
-   "titulo": "Capas de contexto",
+   "titulo": "Temporada, récords y agua",
    "parrafos": [
-    "Límites: distritos del INEI con UBIGEO (versión simplificada del repositorio peru-geojson). Áreas naturales protegidas: servicio geográfico de SERNANP (nacionales, zonas reservadas, de conservación regional y privada). Cobertura del suelo: ESA WorldCover 2021, clase mayoritaria alrededor de cada foco. Población: WorldPop 2020 (1 km). Relieve: AWS Terrain Tiles (SRTM y otras fuentes). Imágenes: Sentinel-2 L2A (Copernicus), vía Microsoft Planetary Computer.",
-    "Región natural (aproximada): sierra si el foco está a 2,000 m o más; por debajo, costa o selva según el lado de la cordillera en que se encuentre."
+    "Para comparar años se usa solo S-NPP, con ventanas del mismo calendario y cortadas en el último día completo. Un departamento marca récord si 2026 supera su máximo 2012–2025; solo se consideran los que promedian 30 focos o más en la ventana (Frank Pinares, Víctor Guardia, Alexander Noblejas).",
+    "Zonas que producen agua (pregunta de Estefanny Mejía): focos sobre 3,800 m (cabeceras de cuenca) y, entre ellos, los que están a unos 250 m de lagunas o humedales altoandinos (bofedales) según WorldCover. Es una aproximación: las capas oficiales de la ANA y el mapa de ecosistemas del MINAM serían más precisas."
    ]
   },
   {
    "titulo": "Limitaciones",
    "parrafos": [
     "Los conteos satelitales no son comparables con los conteos de emergencias de INDECI: miden cosas distintas. Los datos de los últimos días pueden completarse cuando INPE y FIRMS reprocesen pases pendientes. La comparación histórica usa S-NPP; su sensor envejece, pero la proporción S-NPP/NOAA-20 de 2026 es similar a la de 2025.",
-    "Corte de datos: 2026-10-17 02:01 (hora de Lima). Código y datos procesados en el repositorio del proyecto (scripts en Python)."
+    "Pendientes: escuelas (padrón ESCALE) y comunidades nativas (BDPI) a escala nacional, como hizo Ana Karen Zamalloa en Satipo y Atalaya, y la superficie agrícola del MIDAGRI, que no tienen descarga automática pública.",
+    "Corte de datos: 2026-10-22 01:22 (hora de Lima). Código y datos procesados en el repositorio del proyecto (scripts en Python)."
    ]
   }
  ],
- "fuentes": "Fuentes: INPE Programa Queimadas; NASA FIRMS (VIIRS S-NPP, NOAA-20, NOAA-21); SERNANP; INEI; ESA WorldCover; WorldPop; Copernicus Sentinel-2 vía Microsoft Planetary Computer; AWS Terrain Tiles. Cifras oficiales citadas con su fuente.",
+ "fuentes": "Fuentes: INPE Programa Queimadas; NASA FIRMS (VIIRS S-NPP, NOAA-20, NOAA-21); SERNANP; INEI; ESA WorldCover; WorldPop 2026; Google Open Buildings v3; RENIPRESS (SUSALUD); OSIPTEL; Open-Meteo; MapBiomas Fuego Perú; Copernicus Sentinel-2 vía Microsoft Planetary Computer; AWS Terrain Tiles. Cifras oficiales citadas con su fuente.",
  "calibracion_inpe_firms_pct": [
   0.89,
   -1.43,

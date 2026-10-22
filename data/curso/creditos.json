@@ -1,0 +1,262 @@
+{
+ "curso": "Data Science con Python, sesión 14: Incendios en el Perú",
+ "issue": "https://github.com/d2cml-ai/Data-Science-Python/issues/194",
+ "alumnos": [
+  {
+   "nombre": "Adriana Garcés",
+   "github": "dgarcesg",
+   "reto": "¿Qué incendios pueden crecer?",
+   "aporte": "Índice Hot-Dry-Windy calibrado con los días de mayor crecimiento de cada incendio.",
+   "repo": null,
+   "web": "https://claude.ai/artifact/9tFKVaMvGQn7bmdstXvPv7"
+  },
+  {
+   "nombre": "Alessandra Valeria Murga Rimac",
+   "github": "ValMur123",
+   "reto": "Cuánto y qué se perdió",
+   "aporte": "Río Tambo: el par de imágenes correcto (13→20 oct) y el bosque quemado que conserva NBR alto.",
+   "repo": "https://github.com/ValMur123/tarea_clase_python_intermedio",
+   "web": "https://claude.ai/artifact/MfN95PoJdLzJ4YYLgk9fWf"
+  },
+  {
+   "nombre": "Alexander Noblejas",
+   "github": "AlexNoblejas",
+   "reto": "Cuánto, qué y a quién",
+   "aporte": "Ventana de los últimos 10 días frente a 14 años; distinguir foco, huella, área quemada y cifra oficial.",
+   "repo": "https://github.com/AlexNoblejas/incendios-peru",
+   "web": "https://claude.ai/artifact/Vcm1kaLfwJ7CWDfgCm5DL6"
+  },
+  {
+   "nombre": "Amanda Gomez",
+   "github": "av-gomez",
+   "reto": "Dónde intervenir primero",
+   "aporte": "Banderas de falsos positivos (fuentes fijas, suelo desnudo, zonas urbanas) y ranking con clima.",
+   "repo": "https://github.com/av-gomez/incendios-peru-2026",
+   "web": "https://claude.ai/artifact/9q2KEBDdQXhE21xEBv8tFs"
+  },
+  {
+   "nombre": "Ana Karen Zamalloa Lima",
+   "github": "anakaren-zl",
+   "reto": "¿A quién afecta?",
+   "aporte": "Escuelas (ESCALE) y comunidades nativas (BDPI) cerca del fuego en Satipo y Atalaya.",
+   "repo": "https://github.com/anakaren-zl/data-science-python-2026/tree/tarea-3-incendios/tarea_3",
+   "web": "https://claude.ai/artifact/6oRiGEDFVQkkU915gMmWQ9"
+  },
+  {
+   "nombre": "Cristian Moises Wong Pagan",
+   "github": "Cris92W",
+   "reto": "Cuánto se quemó",
+   "aporte": "Chichas: el par de imágenes 15→20 oct y la progresión de la cicatriz entre fechas.",
+   "repo": "https://github.com/Cris92W/Python-Intermedio/tree/main/PRACTICA_1",
+   "web": "https://claude.ai/artifact/GrgeJNJdqtggyNVSFus5bd"
+  },
+  {
+   "nombre": "Diego Enrique Sime Rendón",
+   "github": "diegosimemirror",
+   "reto": "¿A quién afecta?",
+   "aporte": "Filtro de incendio forestal probable; red pública de salud (RENIPRESS) y cobertura 4G (OSIPTEL).",
+   "repo": "https://github.com/diegosimemirror/incendios-2026",
+   "web": "https://claude.ai/artifact/2fVRwcStbC5LgvMmfuYn8h"
+  },
+  {
+   "nombre": "Estefanny Mejía",
+   "github": "estefmej",
+   "reto": "Fuego y agua",
+   "aporte": "Fuego sobre las zonas que producen agua: cabeceras, lagunas y humedales altoandinos.",
+   "repo": "https://github.com/estefmej/fuego-y-agua",
+   "web": "https://claude.ai/artifact/JBcENF72uSqPRxWqHQZJdH"
+  },
+  {
+   "nombre": "Fabricio Luna Palacios",
+   "github": "FaLuna22",
+   "reto": "Cuánto y qué se quemó",
+   "aporte": "Máscara de nieve y controles independientes (MODIS, Landsat, historia 2001–2025) en Chichas.",
+   "repo": "https://github.com/FaLuna22/Data-Science-Python/tree/tarea-07-raster-chichas/tareas/07-raster-incendio-chichas",
+   "web": "https://claude.ai/artifact/NXRDkAuH4CX1zoPpuQupMW"
+  },
+  {
+   "nombre": "Fiorella del Rocío Becerril Mercado",
+   "github": "rociobecerril",
+   "reto": "Cuánto se quemó y ¿año récord?",
+   "aporte": "Manantay con dNBR; tabla de imágenes candidatas con su nubosidad; récord por departamento.",
+   "repo": "https://github.com/rociobecerril/incendios-manantay",
+   "web": "https://claude.ai/artifact/NewzNeqZtuesPQhQusbTas"
+  },
+  {
+   "nombre": "Fiorella Ampuero",
+   "github": "fampueroc",
+   "reto": "Cuánto se quemó",
+   "aporte": "Curahuasi: su análisis mostró que la imagen previa debe ser anterior al primer foco; validación inversa con focos.",
+   "repo": "https://github.com/fampueroc/Data-Science-Python/tree/main/proyecto-incendios",
+   "web": "https://claude.ai/artifact/M7iaz5VmfuUDevcHxfHxvE"
+  },
+  {
+   "nombre": "Flavia Romero Piedra",
+   "github": "FlaviaRomero",
+   "reto": "¿Qué se quemó?",
+   "aporte": "Área quemada 2013–2024 por departamento de MapBiomas Fuego Perú.",
+   "repo": "https://github.com/FlaviaRomero/area_quemada",
+   "web": "https://claude.ai/artifact/P4n1ugoJ1qfa7DBNG58dpL"
+  },
+  {
+   "nombre": "Frank Pinares Gutiérrez",
+   "github": "saffron29",
+   "reto": "¿Año récord?",
+   "aporte": "Detectó los focos duplicados de INPE en octubre; gráfico «cada departamento contra su propia historia».",
+   "repo": "https://github.com/saffron29/incendios-record",
+   "web": "https://claude.ai/artifact/JJfs57at9hKTUzPtNrbB9v"
+  },
+  {
+   "nombre": "Gabriela Pozo",
+   "github": "gabriela-pozo",
+   "reto": "¿Qué se quemó?",
+   "aporte": "Cobertura dentro del área quemada y registro de lo que las nubes no dejan medir; Chichas en 1,690 ha.",
+   "repo": "https://github.com/gabriela-pozo/incendios-peru",
+   "web": "https://claude.ai/artifact/S4zrK3HQHXbqCssKv7oFuZ"
+  },
+  {
+   "nombre": "Greicy Rodriguez",
+   "github": "grey-d18",
+   "reto": "¿A quién afecta?",
+   "aporte": "Rango de umbral 0.10–0.27 en la puna; franjas dentro, 100 m, 500 m y 1 km; cifra oficial junto a la satelital.",
+   "repo": "https://github.com/grey-d18/grey_diplomado/tree/main/tarea_raster",
+   "web": "https://claude.ai/artifact/AYzseMtXY9JuCKQfBvsJpc"
+  },
+  {
+   "nombre": "Hideki Harada",
+   "github": "haradaoyakawahideki",
+   "reto": "¿Año récord?",
+   "aporte": "Lluvia ERA5 y récord en Río Tambo; altitud de los focos frente al territorio.",
+   "repo": "https://github.com/haradaoyakawahideki/Python/tree/tarea-incendios-2026/Ejercicio",
+   "web": "https://haradaoyakawahideki.github.io/Python/"
+  },
+  {
+   "nombre": "Isabella Albarrán Chávez",
+   "github": "isabellaach",
+   "reto": "Clima, viento y evacuación",
+   "aporte": "Corredor del viento y población que debe prepararse en 24–72 h.",
+   "repo": "https://github.com/isabellaach/python-qlab/tree/main/tarea_data_raster",
+   "web": "https://claude.ai/artifact/B6Xd7Qk5C5pGghCu1tjt68"
+  },
+  {
+   "nombre": "Ivette Mamani Flores",
+   "github": "IvettexMamani",
+   "reto": "Informe y normas",
+   "aporte": "Marco normativo con la antigüedad de cada norma.",
+   "repo": "https://github.com/IvettexMamani/Focos_calor_Peru.git",
+   "web": "https://claude.ai/artifact/QPrUTk5QRi733F78JCNy58"
+  },
+  {
+   "nombre": "Jhanela Carhuaz Fuster",
+   "github": "Jhane080",
+   "reto": "Clima y riesgo",
+   "aporte": "Sequía antecedente (días seguidos sin lluvia) en el riesgo de crecimiento; Limatambo.",
+   "repo": "https://github.com/Jhane080/incendios-cusco",
+   "web": "https://jhane080.github.io/incendios-cusco/"
+  },
+  {
+   "nombre": "Jose Navarro",
+   "github": "bocchienjoyer",
+   "reto": "Clima y agricultura",
+   "aporte": "Regla de horas críticas en una misma hora y consulta por lotes a Open-Meteo.",
+   "repo": "https://github.com/bocchienjoyer/incendios-peru-clima-riesgo",
+   "web": "https://peru-fuego-agricultura.fancyperch2.chatgpt.site/"
+  },
+  {
+   "nombre": "Josselin Yauri Condor",
+   "github": "jyauric",
+   "reto": "¿A quién afecta?",
+   "aporte": "Porcentaje de la población de cada departamento expuesta y sensibilidad a la definición de incendio.",
+   "repo": "https://github.com/jyauric/python-actividades/tree/main/tarea_clase",
+   "web": "https://claude.ai/artifact/FsUArWidgW7rQUXxHBmVVU"
+  },
+  {
+   "nombre": "Josué Soria",
+   "github": "josuesoriavas",
+   "reto": "¿Qué se quemó?",
+   "aporte": "Mostró que WorldCover casi no ve la agricultura: 23 % de los focos cae en superficie agrícola MIDAGRI y 1.9 % en «cultivo».",
+   "repo": "https://github.com/josuesoriavas/incendios-cultivos-peru",
+   "web": "https://claude.ai/artifact/8o1axzxDUpRPo4XTg8w33y"
+  },
+  {
+   "nombre": "Lory Acosta",
+   "github": "loryac21-cyber",
+   "reto": "Cuánto, qué y riesgo posterior",
+   "aporte": "Riesgo de huaycos sobre el área quemada con las lluvias; seguimiento de Puno.",
+   "repo": "https://github.com/loryac21-cyber/Tarea-clase5.git",
+   "web": "https://claude.ai/artifact/93ZFZ9VvHi846WxrUx2Bkw"
+  },
+  {
+   "nombre": "Luis Guevara Vega",
+   "github": "LuisGuevaraVega",
+   "reto": "Cuánto, qué y edificaciones",
+   "aporte": "Umbral dNBR adaptativo y exposición de cada edificación en Chichas y Río Tambo.",
+   "repo": "https://github.com/LuisGuevaraVega/incendios-peru",
+   "web": "https://claude.ai/artifact/5zC59rYbPi2SQ47PrArLYL"
+  },
+  {
+   "nombre": "Mirian de la Cruz Condori",
+   "github": "miriandelacon13-ux",
+   "reto": "¿Qué se quemó?",
+   "aporte": "Chichas y Toro con control de calidad de imágenes; el pastizal es el 37 % del entorno pero el 70 % de lo quemado.",
+   "repo": "https://github.com/miriandelacon13-ux/Incendios-Peru",
+   "web": "https://incendios-peru-gm37htuzfqhgvnscpmmtu3.streamlit.app/"
+  },
+  {
+   "nombre": "Noelia Fernanda Leon Ruiz",
+   "github": "NoeliaLRuiz",
+   "reto": "¿Qué se quemó? y respuesta",
+   "aporte": "Línea de tiempo de 27 acciones del Estado en Río Tambo, tomadas del reporte del COEN; distancia a bomberos.",
+   "repo": "https://github.com/NoeliaLRuiz/Python_intermedio_2026/tree/main/pr%C3%A1ctica",
+   "web": "https://claude.ai/artifact/BSAToTnPS8ZYmMs1Fh2xDH"
+  },
+  {
+   "nombre": "Oscar Andres Chávez Inocente",
+   "github": "O-Chavx",
+   "reto": "Cuánto, qué y a quién",
+   "aporte": "Huanoquite: población contada desde el área quemada y no desde los focos.",
+   "repo": "https://github.com/O-Chavx/incendio",
+   "web": "https://claude.ai/artifact/KsGmZoWnaTNaMmSRJyaM9S"
+  },
+  {
+   "nombre": "Ricardo Antonio Macedo Villegas",
+   "github": "AntonioMacedo17",
+   "reto": "¿A quién afecta?",
+   "aporte": "Población por distrito y cómo cambia según qué se considera incendio.",
+   "repo": "https://github.com/AntonioMacedo17/Python_Intermedio_2026/tree/main/tarea_3_1",
+   "web": "https://claude.ai/artifact/T85MK16ZAznqAeJEJFXoon"
+  },
+  {
+   "nombre": "Roddy Huarhua",
+   "github": "roddyhuarhua-hub",
+   "reto": "¿A quién afecta?",
+   "aporte": "Edificaciones dentro y cerca del borde del área quemada Sentinel-2.",
+   "repo": "https://github.com/roddyhuarhua-hub/Data-Science-Python/tree/incendios-open-buildings/tarea_incendios",
+   "web": "https://claude.ai/artifact/LDS3s7zx2CybxJ9RFKy4No"
+  },
+  {
+   "nombre": "Rodrigo Norabuena",
+   "github": "rodnm",
+   "reto": "¿A quién afecta?",
+   "aporte": "Filtro de quemas urbanas y fuentes fijas; población y edificaciones a 1, 2, 5 y 10 km sin doble conteo; consulta de Google Open Buildings y WorldPop 2026.",
+   "repo": "https://github.com/rodnm/mapa-incendios-peru-2026",
+   "web": "https://claude.ai/artifact/L7bWfwPE94wdHdTsXhLNcy"
+  },
+  {
+   "nombre": "Víctor Guardia",
+   "github": "vguardiaf",
+   "reto": "¿Año récord?",
+   "aporte": "Récords por departamento y la lectura «temporada baja, octubre alto».",
+   "repo": "https://github.com/vguardiaf/qlabpucp_python_intermedio",
+   "web": "https://claude.ai/artifact/X8oDTiZ6w59yggsH36ptFu"
+  },
+  {
+   "nombre": "Ximena Pinillos Zegarra",
+   "github": "ximenapize",
+   "reto": "Cuánto se quemó y a quién afecta",
+   "aporte": "Área quemada sembrada con focos en la selva; porcentaje sin dato como dato obligatorio; techos por distancia.",
+   "repo": "https://github.com/ximenapize/python-qlab/tree/main/tarea_raster",
+   "web": "https://ximenapize.github.io/python-qlab/tarea_raster/docs/"
+  }
+ ]
+}

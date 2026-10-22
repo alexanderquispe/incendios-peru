@@ -1,8 +1,11 @@
 """Contexto oficial, validación con incendios reportados y texto de metodología.
 
-Las cifras oficiales provienen de comunicados y notas de prensa (revisadas el
-17 oct 2026) y se registran con su fuente; no se mezclan con los conteos
+Las cifras oficiales provienen de comunicados, reportes del COEN y notas de prensa
+(revisadas el 22 oct 2026) y se registran con su fuente; no se mezclan con los conteos
 satelitales. Los datos de validación se leen de los eventos calculados.
+También reúne los aportes del curso de Data Science (sesión 14) que no salen de un
+cálculo: acciones del Estado en Río Tambo (Noelia León), normas (Ivette Mamani) y
+la lista de quienes colaboraron (data/curso/).
 Salida: dashboard/data/contexto.json
 """
 from pathlib import Path
@@ -12,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[1]
+CURSO = RAIZ / "data" / "curso"
 RAW, INT, PRO = RAIZ / "data" / "raw", RAIZ / "data" / "interim", RAIZ / "data" / "processed"
 OUT = RAIZ / "dashboard" / "data" / "contexto.json"
 
@@ -30,6 +34,8 @@ OFICIAL = [
      "Infobae", "https://www.infobae.com/peru/2026/10/16/incendios-forestales-en-peru-520-distritos-estan-en-riesgo-muy-alto-y-estas-son-las-regiones-mas-expuestas/"),
     ("Incendios extinguidos en áreas protegidas en 2026", "56 en 20 ANP", "MINAM/SERNANP, vía Andina (13 oct)",
      "Andina", "https://andina.pe/agencia/noticia-minam-extinguio-56-incendios-forestales-areas-naturales-protegidas-durante-2026-1095793.aspx"),
+    ("Incendio de Río Tambo (Satipo, Junín), al 21 oct", "1,200 ha de cobertura natural y 120 ha de cultivos", "COEN-INDECI, Reporte complementario N.º 14680 (21 oct, 17:05 h)",
+     "Copia del reporte", "https://github.com/NoeliaLRuiz/Python_intermedio_2026/blob/main/pr%C3%A1ctica/reto-c-incendios/data/raw/COEN_reporte_complementario_14680_rio_tambo_21oct2026.pdf"),
     ("Referencia 2024 (año récord)", "1,754 incendios, 63,710 ha, 35 fallecidos", "INDECI, vía Andina (25 nov 2024)",
      "Andina", "https://andina.pe/agencia/noticia-indeci-se-han-registrado-1754-incendios-forestales-lo-va-del-ano-y-hay-35-muertos-1009212.aspx"),
 ]
@@ -40,20 +46,20 @@ def fmt(v):
 
 
 def validacion(ev, focos):
-    def ev_info(eid):
-        return ev.set_index("evento").loc[eid]
+    def buscar(m):
+        return ev[m].sort_values("focos", ascending=False).iloc[0]
 
     filas = []
-    e = ev_info("E45347")
+    e = buscar((ev.distrito == "Río Tambo") & (ev.inicio >= "2026-10-10") & (ev.inicio < "2026-10-16"))
     filas.append({
         "incendio": "Río Tambo (Satipo, Junín), comunidad nativa Tsyapo",
         "reporte": "INDECI: 350 ha de cobertura natural y 80 ha de cultivos; amenaza a la Reserva Comunal Asháninka.",
         "enlace": {"nombre": "Andina, 13 oct", "url": "https://andina.pe/agencia/noticia-indeci-siete-nuevos-incendios-forestales-se-iniciaron-distritos-cinco-regiones-1095820.aspx"},
         "detectado": True,
         "detalle": f"{fmt(e.focos)} focos entre el {e.inicio.day} y el {e.ultimo.day} oct; huella de {fmt(e.huella_ha)} ha, "
-                   f"a {e.dist_anp_km:.1f} km de la Reserva Comunal Asháninka. Sigue activo.",
+                   f"a {e.dist_anp_km:.1f} km de la Reserva Comunal Asháninka. Sentinel-2 mide al menos 392 ha con el 55 % del entorno bajo nubes.",
     })
-    e = ev_info("E37746")
+    e = buscar(ev.anp.fillna("").str.contains("Huascarán") & (ev.inicio >= "2026-10-01") & (ev.inicio < "2026-10-13"))
     filas.append({
         "incendio": "Parque Nacional Huascarán, sector Llanganuco (Yungay, Áncash)",
         "reporte": "MINAM/SERNANP: unas 400 ha (100 dentro del parque); extinguido.",
@@ -94,28 +100,52 @@ def metodo(resumen, calib):
         {"titulo": "Focos de calor", "parrafos": [
             "Un foco de calor es un píxel de 375 m en el que el sensor VIIRS registró una anomalía térmica compatible con fuego. "
             "Se usan los tres satélites con VIIRS (S-NPP, NOAA-20 y NOAA-21), que pasan sobre el Perú varias veces al día, de día y de noche. "
-            "Un foco no equivale a un incendio forestal: también aparecen quemas agrícolas y de pastos. Las nubes y el humo denso pueden ocultar el fuego.",
+            "Un foco no equivale a un incendio forestal: también aparecen quemas agrícolas, de pastos y fuentes urbanas o industriales. Las nubes y el humo denso pueden ocultar el fuego.",
             "Datos de 2025-06 a la fecha: INPE (Brasil), programa Queimadas, archivo mensual de focos de Sudamérica, filtrado al Perú. "
-            "Los pases posteriores al último dato de INPE vienen de NASA FIRMS (tiempo casi real).",
+            "Los pases posteriores al último dato de INPE vienen de NASA FIRMS (tiempo casi real). Desde el 13 oct 2026 INPE repite focos (mismo satélite, hora y posición "
+            "con otro identificador); se deja uno. Lo detectó Frank Pinares en el curso.",
             f"Serie histórica 2012–2025: NASA FIRMS, archivo estándar VIIRS S-NPP del Perú, solo focos de vegetación. "
             f"Antes de unir las dos fuentes se compararon mes a mes en julio–octubre de 2025: la diferencia entre INPE y FIRMS fue de {calib}.",
             "Se excluyen fuentes de calor permanentes (volcanes como Sabancaya y Ubinas, antorchas de gas e industrias): focos a menos de 500 m de "
             "detecciones que FIRMS clasifica como volcán u otra fuente estática entre 2012 y 2025. Solo se conservan focos dentro de los límites distritales del INEI.",
         ]},
-        {"titulo": "Incendios (eventos)", "parrafos": [
-            "Los focos se agrupan en eventos: dos focos pertenecen al mismo incendio si están a 1 km o menos y a 48 horas o menos entre sí, "
+        {"titulo": "Incendios y evidencia", "parrafos": [
+            "Los focos se agrupan en incendios: dos focos pertenecen al mismo si están a 1 km o menos y a 48 horas o menos entre sí, "
             "directamente o a través de otros focos. Estado: «Activo» si el último foco tiene menos de 24 horas; «En observación» entre 24 y 72 horas; "
-            "«Sin actividad reciente» después. Un incendio puede seguir activo bajo nubes sin ser visto.",
-            "Huella VIIRS: superficie de las celdas de 375 m con al menos un foco. Sirve para comparar tamaños entre incendios, pero no es el área quemada oficial: "
+            "«Sin actividad reciente» después.",
+            "Evidencia (adaptado de Diego Sime y Rodrigo Norabuena): «incendio de vegetación probable» si tiene 3 o más focos, vistos en 2 o más pases satelitales, "
+            "y al menos la mitad en vegetación natural según WorldCover. «Posible quema urbana o fuente fija» si hay 5,000 personas o más a 1 km, si la mitad de los focos "
+            "cae en zona urbana o suelo desnudo, o si son 1 o 2 focos en un punto que ardió en 5 días o más de los 180 previos. El resto queda «sin confirmar». "
+            "Las cifras principales usan solo los incendios probables: un foco suelto en una ciudad sumaba antes cientos de miles de personas «cerca del fuego».",
+            "Huella VIIRS: superficie de las celdas de 375 m con al menos un foco. Sirve para comparar tamaños entre incendios, pero no es el área quemada: "
             "sobrestima los incendios pequeños (cada foco cuenta 14 ha) y subestima los que quedan bajo nubes.",
-            "Área quemada (Sentinel-2): diferencia del índice normalizado de quemado (dNBR, bandas B8A y B12) entre la imagen despejada más reciente antes del inicio "
-            "y la más reciente después, con máscara de nubes, sombras y agua. Se parte de los píxeles con dNBR de 0.27 o más a 750 m o menos de un foco y se suman "
-            "los píxeles contiguos con dNBR de 0.10 o más y NBR posterior de 0.10 o menos (suelo carbonizado), hasta 3 km de los focos. Clases de severidad de Key y Benson (USGS). "
-            "Si la imagen es anterior al primer foco, no se estima.",
-            "En la vista 3D, la línea blanca es el borde del área quemada que muestra la imagen Sentinel-2 y la línea punteada, la zona a 250 m o menos de los focos VIIRS "
-            "acumulados hasta el día elegido. No coinciden, y es esperable: VIIRS solo observa el fuego en sus pases de alrededor de la 01:30 y las 13:30 h, con píxeles de 375 m, "
-            "y entre un pase y otro el frente puede quemar grandes extensiones de pajonal sin ser detectado.",
-            "Avance máximo del frente: distancia máxima entre un foco nuevo del día y el foco previo más cercano del mismo incendio.",
+        ]},
+        {"titulo": "Área quemada y qué se quemó (Sentinel-2)", "parrafos": [
+            "Diferencia del índice normalizado de quemado (dNBR, bandas B8A y B12) entre una imagen anterior al primer foco y la primera imagen despejada después del último foco "
+            "(o la más reciente si aún no hay), comparando la hora de la toma con la del foco. En la selva, los huecos por nubes se completan píxel a píxel con las tomas siguientes. "
+            "Se enmascaran nubes, sombras, agua y nieve (con 60 m de borde).",
+            "Se parte de los píxeles con dNBR de 0.27 o más a 750 m o menos de un foco y se suman los contiguos con dNBR de 0.10 o más y NBR posterior de 0.10 o menos "
+            "(suelo carbonizado), hasta 3 km de los focos. Se informa también el área con dNBR de 0.27 o más: en la puna el pajonal arde con dNBR bajo y la diferencia "
+            "entre umbrales es grande (Chichas: 1,736 frente a 219 ha). Clases de severidad de Key y Benson (USGS).",
+            "Qué se quemó: ESA WorldCover 2021 a 10 m dentro del área quemada, por clase de severidad. WorldCover casi no distingue chacras: Josué Soria mostró que el 23 % "
+            "de los focos cae en la Superficie Agrícola Nacional 2024 del MIDAGRI y solo el 1.9 % en «cultivo» de WorldCover.",
+            "En la vista 3D, la línea blanca es el borde del área quemada y la línea punteada, la zona a 250 m o menos de los focos VIIRS acumulados hasta el día elegido. "
+            "No coinciden: VIIRS solo observa el fuego hacia la 01:30 y las 13:30 h, con píxeles de 375 m, y entre pases el frente puede avanzar sin ser visto.",
+        ]},
+        {"titulo": "¿A quién afecta?", "parrafos": [
+            "Población: WorldPop 2026 a 100 m, restringida a zonas con edificaciones. Se cuentan las celdas a 1, 2, 5 y 10 km de los focos de las últimas 72 h, "
+            "sin doble conteo entre focos ni entre incendios. Edificaciones: Google Open Buildings v3 con confianza de 0.75 o más (copia GeoParquet de VIDA). "
+            "Salud: establecimientos públicos activos con categoría I-1 a III del RENIPRESS (SUSALUD). Conectividad: centros poblados con o sin cobertura 4G garantizada (OSIPTEL).",
+            "En los incendios con área quemada Sentinel-2 se cuentan edificaciones y personas dentro y a 100 m, 500 m y 1 km del borde (Roddy Huarhua, Greicy Rodriguez).",
+            "La cifra depende mucho de la definición: el tablero muestra cómo cambia según el radio y según qué se considera incendio (Josselin Yauri, Ricardo Macedo).",
+        ]},
+        {"titulo": "Clima y riesgo de crecimiento", "parrafos": [
+            "Open-Meteo (modelo de mejor ajuste, sin clave): tiempo horario de los 14 días previos y los 7 siguientes en el centro de los focos recientes de cada incendio.",
+            "Índice de crecimiento = percentil 90 del índice de Fosberg (FFWI: humedad, temperatura y viento) de las próximas 72 h × (0.5 + 0.5 × días seguidos sin lluvia / 14). "
+            "El FFWI vale 0 si llovió 2 mm o más en las 24 h previas. Rojo desde 35 y ámbar desde 20 (umbrales provisionales, por calibrar). "
+            "Horas críticas: humedad menor de 30 %, ráfaga de 30 km/h o más y sin lluvia en 24 h, en una misma hora (Jose Navarro).",
+            "Corredor del viento (Isabella Albarrán): el frente avanza cada hora hacia donde sopla el viento, a 0.10 × velocidad × sequedad, se detiene con lluvia "
+            "y tiene un tope de 15 km. Es una guía para anticipar, no una predicción del frente.",
         ]},
         {"titulo": "Índice de prioridad (0 a 100)", "parrafos": [
             "Suma ponderada, con escalas fijas para que el índice sea comparable entre días: actividad 30 (activo 1, en observación 0.5); "
@@ -123,16 +153,18 @@ def metodo(resumen, calib):
             "población a 5 km 15 (1 = 50,000 personas o más); área protegida 15 (dentro de ANP nacional o zona reservada 1; otra ANP 0.6; a 5 km o menos 0.3).",
             "Es una herramienta de orden para revisar primero lo más relevante; no sustituye la evaluación de campo.",
         ]},
-        {"titulo": "Capas de contexto", "parrafos": [
-            "Límites: distritos del INEI con UBIGEO (versión simplificada del repositorio peru-geojson). Áreas naturales protegidas: servicio geográfico de SERNANP "
-            "(nacionales, zonas reservadas, de conservación regional y privada). Cobertura del suelo: ESA WorldCover 2021, clase mayoritaria alrededor de cada foco. "
-            "Población: WorldPop 2020 (1 km). Relieve: AWS Terrain Tiles (SRTM y otras fuentes). Imágenes: Sentinel-2 L2A (Copernicus), vía Microsoft Planetary Computer.",
-            "Región natural (aproximada): sierra si el foco está a 2,000 m o más; por debajo, costa o selva según el lado de la cordillera en que se encuentre.",
+        {"titulo": "Temporada, récords y agua", "parrafos": [
+            "Para comparar años se usa solo S-NPP, con ventanas del mismo calendario y cortadas en el último día completo. Un departamento marca récord si 2026 supera "
+            "su máximo 2012–2025; solo se consideran los que promedian 30 focos o más en la ventana (Frank Pinares, Víctor Guardia, Alexander Noblejas).",
+            "Zonas que producen agua (pregunta de Estefanny Mejía): focos sobre 3,800 m (cabeceras de cuenca) y, entre ellos, los que están a unos 250 m de lagunas o "
+            "humedales altoandinos (bofedales) según WorldCover. Es una aproximación: las capas oficiales de la ANA y el mapa de ecosistemas del MINAM serían más precisas.",
         ]},
         {"titulo": "Limitaciones", "parrafos": [
             "Los conteos satelitales no son comparables con los conteos de emergencias de INDECI: miden cosas distintas. "
             "Los datos de los últimos días pueden completarse cuando INPE y FIRMS reprocesen pases pendientes. "
             "La comparación histórica usa S-NPP; su sensor envejece, pero la proporción S-NPP/NOAA-20 de 2026 es similar a la de 2025.",
+            "Pendientes: escuelas (padrón ESCALE) y comunidades nativas (BDPI) a escala nacional, como hizo Ana Karen Zamalloa en Satipo y Atalaya, y la superficie "
+            "agrícola del MIDAGRI, que no tienen descarga automática pública.",
             f"Corte de datos: {resumen['corte_local']} (hora de Lima). Código y datos procesados en el repositorio del proyecto (scripts en Python).",
         ]},
     ]
@@ -158,9 +190,13 @@ def main():
     out = {
         "oficial": [{"indicador": a, "cifra": b, "fuente": c, "enlace": {"nombre": d, "url": e}} for a, b, c, d, e in OFICIAL],
         "validacion": validacion(ev, focos),
+        "acciones": pd.read_csv(CURSO / "acciones_rio_tambo.csv").to_dict("records"),
+        "normas": json.load(open(CURSO / "normas.json")),
+        "creditos": json.load(open(CURSO / "creditos.json")),
         "metodo": metodo(resumen, calib),
         "fuentes": "Fuentes: INPE Programa Queimadas; NASA FIRMS (VIIRS S-NPP, NOAA-20, NOAA-21); SERNANP; INEI; ESA WorldCover; "
-                   "WorldPop; Copernicus Sentinel-2 vía Microsoft Planetary Computer; AWS Terrain Tiles. Cifras oficiales citadas con su fuente.",
+                   "WorldPop 2026; Google Open Buildings v3; RENIPRESS (SUSALUD); OSIPTEL; Open-Meteo; MapBiomas Fuego Perú; "
+                   "Copernicus Sentinel-2 vía Microsoft Planetary Computer; AWS Terrain Tiles. Cifras oficiales citadas con su fuente.",
         "calibracion_inpe_firms_pct": [round(v, 2) for v in dif],
     }
     with open(OUT, "w") as f:

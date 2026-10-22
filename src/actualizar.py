@@ -1,5 +1,5 @@
 """Corre todo el flujo en orden: descarga → capas base → focos → eventos →
-detalle 3D → exportación del tablero → contexto.
+detalle 3D → clima → exposición → historia → exportación del tablero → contexto.
 
 Uso: python src/actualizar.py
 El detalle 3D se regenera siempre: con datos nuevos cambian los ids de evento.
@@ -11,7 +11,7 @@ import time
 
 SRC = Path(__file__).resolve().parent
 PASOS = ["01_descargar.py", "02_mapa_base.py", "03_cobertura.py", "04_focos.py", "05_eventos.py",
-         "06_detalle.py", "07_exportar.py", "08_contexto.py"]
+         "06_detalle.py", "09_clima.py", "10_exposicion.py", "11_historia.py", "07_exportar.py", "08_contexto.py"]
 
 if __name__ == "__main__":
     for paso in PASOS:

@@ -6,7 +6,11 @@ Fuentes (todas públicas, sin autenticación):
 - NASA FIRMS: archivo anual por país (VIIRS S-NPP, 2012-2025) y archivos de
   los últimos 7 días (S-NPP, NOAA-20, NOAA-21) para Sudamérica.
 - GADM 4.1: límites administrativos del Perú (departamento, provincia, distrito).
-- WorldPop 2020 (1 km, ajustado a ONU): población.
+- WorldPop 2020 (1 km, ajustado a ONU) y WorldPop 2026 (100 m, restringido a zonas con
+  edificaciones): población.
+- RENIPRESS (SUSALUD): establecimientos de salud con coordenadas; OSIPTEL: cobertura
+  móvil por centro poblado. Ambos de la Plataforma Nacional de Datos Abiertos, que
+  rechaza clientes sin un agente de navegador (fuentes de la entrega de Diego Sime).
 
 Uso: python src/01_descargar.py
 """
@@ -28,15 +32,24 @@ FIRMS_7D = {
 }
 GADM = "https://geodata.ucdavis.edu/gadm/gadm4.1/json/gadm41_PER_{n}.json.zip"
 WORLDPOP = "https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/PER/per_ppp_2020_1km_Aggregated_UNadj.tif"
+WORLDPOP_2026 = ("https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2026/PER/v1/100m/constrained/"
+                 "per_pop_2026_CN_100m_R2025A_v1.tif")
+DATOS_ABIERTOS = {
+    "renipress.csv": "https://www.datosabiertos.gob.pe/sites/default/files/RENIPRESS_30-09-2026.csv",
+    "osiptel_cobertura_ccpp.csv": ("https://www.datosabiertos.gob.pe/sites/default/files/Porcentaje%20de%20cobertura%20movil%20"
+                                   "por%20centro%20poblado%20empresa%20operadora%20y%20tecnolog%C3%ADa.csv"),
+}
+NAVEGADOR = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"}
 
 # Meses INPE: 2025-06 en adelante (calibración con FIRMS 2025 + todo 2026)
 MESES_INPE = [f"2025{m:02d}" for m in range(6, 13)] + [f"2026{m:02d}" for m in range(1, 11)]
 
 
-def bajar(url, destino, forzar=False):
+def bajar(url, destino, forzar=False, headers=None):
     if destino.exists() and not forzar:
         return destino
-    r = requests.get(url, timeout=300)
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    r = requests.get(url, timeout=600, headers=headers)
     r.raise_for_status()
     destino.write_bytes(r.content)
     print(f"  {destino.name}: {len(r.content) / 1e6:.1f} MB")
@@ -93,8 +106,13 @@ def main():
                 destino.write_bytes(z.read(z.namelist()[0]))
             print(f"  {destino.name}")
 
-    print("WorldPop 2020")
+    print("WorldPop 2020 y 2026")
     bajar(WORLDPOP, RAW / "worldpop_per_2020_1km.tif")
+    bajar(WORLDPOP_2026, RAW / "worldpop_per_2026_100m_constrained.tif")
+
+    print("Salud (RENIPRESS) y cobertura móvil (OSIPTEL)")
+    for nombre, url in DATOS_ABIERTOS.items():
+        bajar(url, RAW / "servicios" / nombre, headers=NAVEGADOR)
 
 
 if __name__ == "__main__":

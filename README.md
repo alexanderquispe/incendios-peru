@@ -11,15 +11,19 @@ Sentinel-2 y límites oficiales.
 
 ## Qué muestra
 
-| Sección | Contenido |
+El tablero tiene ocho pestañas. Integra el trabajo de 32 alumnas y alumnos del curso de Data Science con Python
+(sesión 14, [entregas](https://github.com/d2cml-ai/Data-Science-Python/issues/194)); ver *Aportes del curso*.
+
+| Pestaña | Contenido |
 |---|---|
-| Resumen | Titular con la conclusión del día, cifras clave con su contexto 2012–2026 (mini-barras por año), variación de focos frente a las 24 h previas, antigüedad de los datos y glosario mínimo |
-| Atención prioritaria | Tres listas para decidir: incendios que más se extienden (huella nueva en 24 h), incendios activos con más población a ≤ 5 km y áreas protegidas con más focos en 7 días |
-| Mapa | Mapa nacional con focos por antigüedad, incendios activos, áreas protegidas, escala y animación de la temporada; lista de los 25 incendios activos de mayor prioridad (0–100) con los factores que más pesan |
-| Incendio en 3D | Vista 3D de 15 incendios priorizados: relieve real, imagen Sentinel-2 (color natural e infrarrojo), borde del área quemada que muestra la imagen (línea blanca), zona con focos VIIRS por día (punteada), severidad del quemado (dNBR), brújula y gráficos de huella, intensidad (FRP) y altitud |
-| Temporada | Focos S-NPP por día frente al rango 2012–2025 y acumulado desde el 1 de julio, con títulos que dicen el hallazgo |
-| Departamentos | Focos 24 h / 7 días / temporada, tendencia de 30 días, anomalía frente a 2012–2025, incendios activos y focos en ANP; al elegir un departamento, el mapa lo encuadra |
-| Fuentes y método | Cifras del COEN, INDECI, SENAMHI, CENEPRED y MINAM/SERNANP con su fuente; cotejo de incendios reportados con las detecciones; metodología |
+| Situación | Titular con la conclusión del día, cifras clave con su contexto 2012–2026, cuatro listas para decidir (crecen más, clima a favor, más población cerca, áreas protegidas), mapa nacional y lista de prioridad. Solo cuenta incendios de vegetación probables |
+| Incendios | Vista 3D de ~20 incendios (relieve, Sentinel-2, área quemada, avance diario); tabla de área quemada con su rango por umbral, % sin dato y cobertura quemada; las mismas cicatrices medidas por los alumnos; qué se quemó (WorldCover 10 m) |
+| Clima y riesgo | Índice de crecimiento a 72 h (Fosberg + sequía antecedente), horas críticas, lluvia, corredor del viento y población en él, serie diaria de 14 días por incendio |
+| ¿A quién afecta? | Personas a 1, 2, 5 y 10 km sin doble conteo (WorldPop 2026), edificaciones (Google Open Buildings), establecimientos de salud (RENIPRESS), centros poblados sin 4G (OSIPTEL), % del departamento, sensibilidad a la definición de incendio y exposición alrededor del área quemada |
+| Agua y ecosistemas | Fuego en cabeceras de cuenca (> 3,800 m) y junto a lagunas y bofedales, dentro de áreas protegidas, y área quemada 2013–2024 de MapBiomas |
+| Temporada | Focos por día y acumulados frente a 2012–2025, cada departamento frente a su propia historia (tres ventanas), 2024 frente a 2026 y tabla de departamentos |
+| Respuesta | Línea de tiempo de las acciones del Estado en Río Tambo (COEN), marco normativo con su antigüedad, cifras oficiales y validación |
+| Método y créditos | Metodología, fuentes y limitaciones; quiénes colaboraron y qué aportó cada uno |
 
 ## Hallazgos al corte (17 oct 2026, 02:01 h de Lima)
 
@@ -45,20 +49,37 @@ Sentinel-2 y límites oficiales.
 | Límites | INEI con UBIGEO ([peru-geojson](https://github.com/juaneladio/peru-geojson)); tildes restituidas con [ubigeo-peru-aumentado](https://github.com/jmcastagnetto/ubigeo-peru-aumentado) |
 | Áreas naturales protegidas | SERNANP, `geoservicios.sernanp.gob.pe` (ANP nacionales, zonas reservadas, ACR y ACP) |
 | Cobertura del suelo | ESA WorldCover 2021 v200 |
-| Población | WorldPop 2020, 1 km |
+| Población | WorldPop 2026, 100 m, restringido a zonas con edificaciones (WorldPop 2020, 1 km, para la prioridad histórica) |
+| Edificaciones | Google Open Buildings v3 (confianza ≥ 0.75), copia GeoParquet de VIDA en source.coop, consultada con DuckDB |
+| Salud | RENIPRESS (SUSALUD), Plataforma Nacional de Datos Abiertos: establecimientos públicos activos I-1 a III |
+| Conectividad | OSIPTEL: cobertura móvil por centro poblado (4G garantizada) |
+| Clima | Open-Meteo, pronóstico horario y 14 días previos (sin clave) |
+| Área quemada 2013–2024 | MapBiomas Fuego Perú, Colección 1 (CC-BY), por departamento |
+| Acciones del Estado | COEN-INDECI, Reporte complementario N.º 14680 (21 oct 2026) |
 | Relieve | AWS Terrain Tiles (Terrarium) |
 | Imágenes | Sentinel-2 L2A (Copernicus) vía Microsoft Planetary Computer |
 
 INPE y FIRMS se calibraron entre sí en julio–octubre de 2025: la diferencia mensual en S-NPP fue de −1.4 % a +0.9 %.
+Desde el 13 de octubre de 2026 INPE repite focos (misma hora, posición y satélite con otro identificador; ≈ 4 % de octubre):
+se eliminan en `src/04_focos.py`.
 
 ## Método (resumen)
 
 - **Fuentes estáticas**: se excluyen focos a < 500 m de detecciones FIRMS tipo volcán u otra fuente estática (2012–2025).
 - **Eventos**: componentes conexas de focos a ≤ 1 km y ≤ 48 h. Estado *Activo* (< 24 h), *En observación* (24–72 h), *Sin actividad reciente*.
+- **Evidencia**: *incendio de vegetación probable* (≥ 3 focos, ≥ 2 pases, ≥ 50 % en vegetación natural), *posible quema urbana o
+  fuente fija* (≥ 5,000 personas a 1 km, ≥ 50 % en zona urbana o suelo desnudo, o 1–2 focos en un punto que ardió ≥ 5 días de los
+  180 previos) y *sin confirmar*. Las cifras principales solo usan los probables.
 - **Huella VIIRS**: celdas de 375 m con al menos un foco. Sirve para comparar incendios; no es el área quemada oficial.
-- **Área quemada**: dNBR de Sentinel-2 (B8A/B12), pre y post, con máscara SCL. Umbral doble sembrado con los focos: núcleo con
-  dNBR ≥ 0.27 a ≤ 750 m de un foco y crecimiento por píxeles contiguos con dNBR ≥ 0.10 y NBR posterior ≤ 0.10 (suelo carbonizado),
-  hasta 3 km. Clases de Key y Benson (USGS). No se estima si la imagen es anterior al primer foco.
+- **Área quemada**: dNBR de Sentinel-2 (B8A/B12) con máscara SCL (nubes, sombras, agua, nieve + 60 m). Imagen previa anterior a la
+  hora del primer foco; posterior, la primera despejada después del último foco; en la selva, mosaico píxel a píxel de varias tomas.
+  Umbral doble sembrado con los focos: núcleo con dNBR ≥ 0.27 a ≤ 750 m de un foco y crecimiento por píxeles contiguos con
+  dNBR ≥ 0.10 y NBR posterior ≤ 0.10, hasta 3 km. Se publica también el área con solo dNBR ≥ 0.27 y el % sin dato.
+  Cobertura quemada con ESA WorldCover 10 m. Clases de Key y Benson (USGS).
+- **Exposición**: celdas WorldPop 2026 a 1, 2, 5 y 10 km de los focos de las últimas 72 h, unidas sin doble conteo; edificaciones,
+  salud y centros poblados a ≤ 1 y 5 km; alrededor del área quemada, dentro y a 100 m, 500 m y 1 km del borde.
+- **Riesgo de crecimiento**: percentil 90 del FFWI de Fosberg en 72 h × (0.5 + 0.5 × días secos / 14); FFWI = 0 con ≥ 2 mm en 24 h.
+  Horas críticas (humedad < 30 %, ráfaga ≥ 30 km/h, sin lluvia). Corredor del viento: avance horario = 0.10 × viento × sequedad, tope 15 km.
 - **Prioridad (0–100)**: actividad 30, tamaño 20, intensidad 20, población a 5 km 15, área protegida 15, con escalas fijas (ver `src/05_eventos.py`).
 - **Región natural**: sierra ≥ 2,000 m; debajo, costa o selva según la vertiente.
 
@@ -72,14 +93,20 @@ src/
   02_mapa_base.py    límites INEI, ANP SERNANP, relieve nacional
   03_cobertura.py    mosaico ESA WorldCover (~150 m)
   04_focos.py        unión de fuentes, limpieza y atributos de cada foco
-  05_eventos.py      agrupamiento en incendios, estado, exposición, prioridad
-  06_detalle.py      terreno, texturas Sentinel-2, dNBR y avance diario de los incendios priorizados
+  05_eventos.py      agrupamiento en incendios, evidencia, estado, población, prioridad
+  06_detalle.py      terreno, texturas Sentinel-2, dNBR, cobertura quemada y avance diario de ~20 incendios
+  09_clima.py        pronóstico Open-Meteo, índice de crecimiento y corredor del viento
+  10_exposicion.py   personas, edificaciones, salud y conectividad cerca de los incendios
+  11_historia.py     récords por departamento, 2024 vs 2026, fuego en cabeceras y ANP
   07_exportar.py     JSON del tablero
-  08_contexto.py     cifras oficiales, validación y texto de metodología
+  08_contexto.py     cifras oficiales, validación, metodología, acciones, normas y créditos
+  exposicion_util.py WorldPop 2026 en memoria y consulta de Open Buildings con caché
   terreno.py         utilidades de teselas de elevación
   actualizar.py      corre todo en orden
   servir.py          servidor local del tablero
-dashboard/           página (index.html), datos (data/) e imágenes (assets/)
+dashboard/           página (index.html, pestanas.js), datos (data/) e imágenes (assets/)
+data/curso/          aportes curados del curso: créditos, acciones del Estado, normas, cifras de los alumnos, MapBiomas
+analisis/            análisis puntuales (2024 frente a 2026)
 data/processed/eventos.csv   tabla de incendios de la temporada (uno por fila)
 ```
 
@@ -88,7 +115,7 @@ data/processed/eventos.csv   tabla de incendios de la temporada (uno por fila)
 ```bash
 uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-.venv/bin/python src/actualizar.py      # ~20 min; descarga y regenera todo
+.venv/bin/python src/actualizar.py      # ~45 min; descarga y regenera todo
 .venv/bin/python src/servir.py          # http://localhost:8765
 ```
 
@@ -107,3 +134,16 @@ en el mismo enlace.
   en la imagen previa.
 - Los datos de los últimos días pueden completarse cuando INPE y FIRMS reprocesen pases pendientes.
 - La región natural y la cobertura son aproximaciones para orientar, no clasificaciones oficiales.
+- La exposición depende de la definición de incendio y del radio: el tablero muestra la sensibilidad. WorldCover casi no distingue
+  chacras (23 % de los focos cae en superficie agrícola MIDAGRI y 1.9 % en «cultivo»). Faltan escuelas (ESCALE), comunidades nativas
+  (BDPI) y superficie agrícola a escala nacional: no tienen descarga automática pública.
+- El índice de crecimiento y el corredor del viento usan umbrales provisionales y un modelo de ~10 km: sirven para anticipar, no
+  predicen el frente.
+
+## Aportes del curso
+
+Este tablero integra métodos, datos y hallazgos de las entregas de la sesión 14 del curso de Data Science con Python
+([issue #194](https://github.com/d2cml-ai/Data-Science-Python/issues/194)). El detalle de qué aportó cada persona está en
+`data/curso/creditos.json` y en la pestaña *Método y créditos*.
+
+Adriana Garcés, Alessandra Valeria Murga Rimac, Alexander Noblejas, Amanda Gomez, Ana Karen Zamalloa Lima, Cristian Moises Wong Pagan, Diego Enrique Sime Rendón, Estefanny Mejía, Fabricio Luna Palacios, Fiorella Ampuero, Fiorella del Rocío Becerril Mercado, Flavia Romero Piedra, Frank Pinares Gutiérrez, Gabriela Pozo, Greicy Rodriguez, Hideki Harada, Isabella Albarrán Chávez, Ivette Mamani Flores, Jhanela Carhuaz Fuster, Jose Navarro, Josselin Yauri Condor, Josué Soria, Lory Acosta, Luis Guevara Vega, Mirian de la Cruz Condori, Noelia Fernanda Leon Ruiz, Oscar Andres Chávez Inocente, Ricardo Antonio Macedo Villegas, Roddy Huarhua, Rodrigo Norabuena, Víctor Guardia y Ximena Pinillos Zegarra.

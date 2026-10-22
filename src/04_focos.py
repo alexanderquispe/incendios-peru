@@ -53,7 +53,12 @@ def leer_inpe():
     # día/noche para todos según la hora local del pase
     h = (out.t_utc + UTC_PERU).dt.hour
     out["dia_noche"] = np.where((h >= 6) & (h < 18), "D", "N")
-    return out
+    # INPE repite focos desde el 13 oct 2026: mismo satélite, misma hora y misma posición con otro id
+    # (≈ 4 % de octubre). Se deja uno; detectado por Frank Pinares (curso de Data Science, sesión 14).
+    clave = out.assign(_la=out.lat.round(4), _lo=out.lon.round(4))
+    dup = clave.duplicated(["satelite", "t_utc", "_la", "_lo"])
+    print(f"INPE: {dup.sum():,} focos duplicados eliminados")
+    return out[~dup.values]
 
 
 def leer_firms_7d(peru_bbox):

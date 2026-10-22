@@ -1,0 +1,144 @@
+{
+ "corte": "2026-10-22 01:22",
+ "sensibilidad": {
+  "probables": {
+   "1km": 8143,
+   "2km": 42380,
+   "5km": 235952,
+   "10km": 928847,
+   "incendios": 118
+  },
+  "probables_activos": {
+   "1km": 627,
+   "2km": 1803,
+   "5km": 17292,
+   "10km": 46962,
+   "incendios": 44
+  },
+  "todos_3focos": {
+   "1km": 10194,
+   "2km": 52617,
+   "5km": 306911,
+   "10km": 1249172,
+   "incendios": 148
+  },
+  "todos": {
+   "1km": 136159,
+   "2km": 513225,
+   "5km": 2659065,
+   "10km": 9535043,
+   "incendios": 534
+  }
+ },
+ "departamentos": [
+  {
+   "departamento": "Junín",
+   "pob_5km": 69310,
+   "pct": 4.79
+  },
+  {
+   "departamento": "Huánuco",
+   "pob_5km": 54362,
+   "pct": 6.51
+  },
+  {
+   "departamento": "Áncash",
+   "pob_5km": 48637,
+   "pct": 3.89
+  },
+  {
+   "departamento": "Pasco",
+   "pob_5km": 10027,
+   "pct": 3.34
+  },
+  {
+   "departamento": "Huancavelica",
+   "pob_5km": 9887,
+   "pct": 2.44
+  },
+  {
+   "departamento": "Cusco",
+   "pob_5km": 9216,
+   "pct": 0.64
+  },
+  {
+   "departamento": "Puno",
+   "pob_5km": 7874,
+   "pct": 0.59
+  },
+  {
+   "departamento": "San Martín",
+   "pob_5km": 4368,
+   "pct": 0.46
+  },
+  {
+   "departamento": "Madre de Dios",
+   "pob_5km": 3691,
+   "pct": 2.1
+  },
+  {
+   "departamento": "Ayacucho",
+   "pob_5km": 3461,
+   "pct": 0.48
+  },
+  {
+   "departamento": "La Libertad",
+   "pob_5km": 3427,
+   "pct": 0.17
+  },
+  {
+   "departamento": "Cajamarca",
+   "pob_5km": 3095,
+   "pct": 0.2
+  },
+  {
+   "departamento": "Arequipa",
+   "pob_5km": 2673,
+   "pct": 0.17
+  },
+  {
+   "departamento": "Moquegua",
+   "pob_5km": 2527,
+   "pct": 1.27
+  },
+  {
+   "departamento": "Ucayali",
+   "pob_5km": 1925,
+   "pct": 0.32
+  },
+  {
+   "departamento": "Loreto",
+   "pob_5km": 730,
+   "pct": 0.07
+  },
+  {
+   "departamento": "Apurímac",
+   "pob_5km": 323,
+   "pct": 0.07
+  },
+  {
+   "departamento": "Lima",
+   "pob_5km": 207,
+   "pct": 0.0
+  },
+  {
+   "departamento": "Ica",
+   "pob_5km": 148,
+   "pct": 0.02
+  },
+  {
+   "departamento": "Piura",
+   "pob_5km": 53,
+   "pct": 0.0
+  }
+ ],
+ "edificaciones_5km": 148133,
+ "edificaciones_1km": 4507,
+ "salud_5km": 153,
+ "ccpp_5km": 2182,
+ "ccpp_sin_4g_5km": 1669,
+ "fuentes": {
+  "salud_total": 9469,
+  "ccpp_total": 108115
+ }
+}

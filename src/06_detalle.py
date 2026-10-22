@@ -5,7 +5,8 @@ Para cada evento seleccionado genera:
 - texturas: relieve sombreado y, si hay imagen sin nubes, Sentinel-2 L2A en color
   natural y en infrarrojo de onda corta (el área quemada se ve rojo oscuro)
 - área quemada visible en Sentinel-2 (dNBR antes/después, sembrada con los focos):
-  polígono, hectáreas por clase de severidad y qué parte de los focos cae dentro
+  polígono, hectáreas por clase de severidad, qué cobertura se quemó (ESA WorldCover
+  10 m) y qué parte de los focos cae dentro
 - avance diario: zona con focos VIIRS acumulada, área, avance máximo del frente,
   FRP y rango de altitud de los focos de cada día
 
@@ -51,8 +52,9 @@ ANCHO_TEX = 1024      # columnas de las texturas
 RADIO_FOCO_M = 250    # radio con que se dibuja cada foco al armar la zona con focos VIIRS
 # Área quemada Sentinel-2, umbral doble sembrado con los focos: el núcleo es dNBR ≥ 0.27 a ≤ 750 m de
 # un foco; crece por píxeles contiguos con dNBR ≥ 0.10 y NBR posterior ≤ 0.10 (suelo carbonizado, no
-# chacras cosechadas ni pastos secos), hasta 3 km de los focos. VIIRS solo ve el fuego en sus pases
-# (~01:30 y ~13:30), por eso la cicatriz suele extenderse más allá de los focos.
+# chacras cosechadas ni pastos secos), hasta 3 km de los focos. El núcleo no exige NBR posterior bajo:
+# el bosque quemado conserva NBR ~0.15 (Río Tambo, revisión de la entrega de Alessandra Murga).
+# VIIRS solo ve el fuego en sus pases (~01:30 y ~13:30), por eso la cicatriz suele pasar los focos.
 DNBR_NUCLEO, DNBR_MIN, NBR_POST_MAX = 0.27, 0.10, 0.10
 R_NUCLEO_M, D_MAX_M = 750, 3000
 CLASES_DNBR = [  # USGS (Key y Benson 2006)
@@ -62,17 +64,32 @@ CLASES_DNBR = [  # USGS (Key y Benson 2006)
     (0.66, 9.99, "Alta", (127, 29, 29, 230)),
 ]
 STAC = "https://planetarycomputer.microsoft.com/api/stac/v1"
+REGLA_S2 = 2  # versión de la elección de imágenes guardada en la caché
+WORLDCOVER = {10: "Bosque", 20: "Matorral", 30: "Pastizal", 40: "Cultivo", 50: "Urbano", 60: "Suelo desnudo",
+              70: "Nieve y hielo", 80: "Agua", 90: "Humedal herbáceo", 95: "Manglar", 100: "Musgo y liquen"}
+# incendios que estudiaron los alumnos del curso (sesión 14): siempre tienen vista 3D si siguen en la temporada
+ESTUDIADOS = [
+    ("Curahuasi", -72.468, -13.621), ("Río Tambo", -73.866, -11.837), ("Chichas", -72.985, -15.486),
+    ("Manantay", -74.535, -8.477), ("Huanoquite", -72.134, -13.734), ("Mazamari", -74.074, -11.780),
+    ("Sicuani", -71.302, -14.265), ("Alto Pichigua", -71.153, -14.770), ("Juli", -69.372, -16.443),
+    ("San Cristóbal", -70.727, -16.715), ("Tahuania", -73.790, -9.619), ("Livitaca", -71.557, -14.309),
+    ("Limatambo", -72.377, -13.404), ("Nueva Requena", -74.802, -8.170),
+]
 
 
 def seleccionar(ev):
-    activos = ev[ev.significativo & (ev.estado == "Activo")].sort_values("prioridad", ascending=False)
-    sel = list(activos.evento.head(8))
-    sel += [e for e in ev[ev.significativo].sort_values("huella_ha", ascending=False).evento if e not in sel][:3]
-    en_anp = ev[ev.anp_admin.isin(["Nacional"]) & ev.significativo].sort_values("focos_en_anp", ascending=False)
+    prob = ev[ev.evidencia == "probable"]
+    activos = prob[prob.estado == "Activo"].sort_values("prioridad", ascending=False)
+    sel = list(activos.evento.head(5))
+    # los estudiados por los alumnos: el evento de octubre con más focos cuya caja contiene el punto
+    oct_ = prob[prob.ultimo >= "2026-10-01"]
+    for _, lon, lat in ESTUDIADOS:
+        m = oct_[(oct_.lon_min - 0.01 <= lon) & (oct_.lon_max + 0.01 >= lon) & (oct_.lat_min - 0.01 <= lat) & (oct_.lat_max + 0.01 >= lat)]
+        if len(m) and (eid := m.nlargest(1, "focos").evento.iloc[0]) not in sel:
+            sel.append(eid)
+    sel += [e for e in oct_.sort_values("huella_ha", ascending=False).evento if e not in sel][:3]
+    en_anp = prob[prob.anp_admin.isin(["Nacional"]) & (prob.ultimo >= "2026-10-01")].sort_values("focos_en_anp", ascending=False)
     sel += [e for e in en_anp.evento if e not in sel][:2]
-    # activos dentro o a ≤ 5 km de un área protegida
-    cerca_anp = activos[activos.anp_admin.notna() | (activos.dist_anp_km <= 5)]
-    sel += [e for e in cerca_anp.evento if e not in sel][:2]
     return sel
 
 
@@ -148,9 +165,10 @@ def _leer_banda(href, dst_shape, dst_transform, resampling):
 
 
 def escena(items, bandas, dst_shape, dst_transform):
-    """Mosaico de los items (misma fecha) para las bandas pedidas, en reflectancia."""
+    """Mosaico de los items (misma fecha) para las bandas pedidas, en reflectancia.
+    Primero la escena con menos nubes: dos órbitas del mismo día pueden diferir mucho (Chichas, 20 oct)."""
     out = {b: np.zeros(dst_shape, np.float32) for b in bandas}
-    for it in items:
+    for it in sorted(items, key=lambda it: it.properties.get("eo:cloud_cover", 100)):
         offset = -1000 if str(it.properties.get("s2:processing_baseline", "04.00")) >= "04.00" else 0
         for b in bandas:
             res = Resampling.nearest if b == "SCL" else Resampling.bilinear
@@ -159,16 +177,38 @@ def escena(items, bandas, dst_shape, dst_transform):
             if b == "SCL":
                 out[b][vacio] = arr[vacio]
             else:
-                refl = np.where(arr > 0, (arr + offset) / 10000.0, 0)
+                refl = np.where(arr > 0, np.maximum((arr + offset) / 10000.0, 1e-4), 0)
                 out[b][vacio] = refl[vacio]
     return out
+
+
+NUBE = [0, 1, 3, 8, 9, 10]  # sin dato, saturado, sombra de nube, nubes y cirros
+
+
+def componer(fechas, orden, bandas, shape, transform, max_tomas=4):
+    """Mosaico por píxel: la primera toma manda y las siguientes solo llenan sus huecos por nubes."""
+    out, usadas = None, []
+    for f in orden[:max_tomas]:
+        img = escena(fechas[f], bandas, shape, transform)
+        if out is None:
+            out, usadas = img, [f]
+            continue
+        llenar = np.isin(out["SCL"], NUBE) & ~np.isin(img["SCL"], NUBE)
+        if llenar.mean() < 0.005:
+            continue
+        for b in bandas:
+            out[b][llenar] = img[b][llenar]
+        usadas.append(f)
+        if np.isin(out["SCL"], NUBE).mean() < 0.02:
+            break
+    return out, usadas
 
 
 def fraccion_despejada(scl):
     valido = scl > 0
     if valido.mean() < 0.9:
         return 0.0
-    despejado = np.isin(scl, [4, 5, 6, 7, 11])  # vegetación, suelo, agua, no clasificado, nieve
+    despejado = np.isin(scl, [2, 4, 5, 6, 7, 11])  # zona oscura, vegetación, suelo, agua, no clasificado, nieve
     return float(despejado[valido].mean())
 
 
@@ -190,7 +230,12 @@ def _leer_cache(ruta, caja_, shape):
     z = np.load(ruta)
     if not (np.allclose(z["caja"], caja_) and tuple(z["shape"]) == tuple(shape)):
         return None
-    res = {"post": str(z["post"]) or None, "pre": str(z["pre"]) or None}
+    regla = int(z["regla"]) if "regla" in z.files else 1
+    if regla != REGLA_S2:
+        return None
+    res = {"post": str(z["post"]) or None, "pre": str(z["pre"]) or None,
+           "post_usadas": str(z["post_usadas"]) if "post_usadas" in z.files else "",
+           "pre_usadas": str(z["pre_usadas"]) if "pre_usadas" in z.files else ""}
     for clave in ("post", "pre"):
         if res[clave]:
             res[f"img_{clave}"] = {k.split(":")[1]: z[k].astype(np.float32) for k in z.files if k.startswith(clave + ":")}
@@ -199,7 +244,8 @@ def _leer_cache(ruta, caja_, shape):
 
 def _guardar_cache(ruta, res, caja_, shape):
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    arr = {"caja": np.array(caja_), "shape": np.array(shape), "post": res["post"] or "", "pre": res.get("pre") or ""}
+    arr = {"caja": np.array(caja_), "shape": np.array(shape), "post": res["post"] or "", "pre": res.get("pre") or "",
+           "regla": REGLA_S2, "post_usadas": res.get("post_usadas", ""), "pre_usadas": res.get("pre_usadas", "")}
     for clave in ("post", "pre"):
         for b, v in res.get(f"img_{clave}", {}).items():
             arr[f"{clave}:{b}"] = v.astype(np.uint8 if b == "SCL" else np.float16)
@@ -224,32 +270,66 @@ def sentinel(o, s, e, n, inicio, ultimo, corte, shape, cache=None):
             despejado[fecha] = fraccion_despejada(scl)
         except Exception:
             despejado[fecha] = 0.0
-    ini = inicio.date()
-    post = [f for f in despejado if f >= ini and despejado[f] >= 0.80]
-    pre = [f for f in despejado if f < ini and despejado[f] >= 0.80]
+    # hora local de cada adquisición (~10:10 h): se compara con la hora del primer y del último foco,
+    # no con la fecha (Río Tambo: la imagen del 13 oct 10:07 es anterior al primer foco, 13:06)
+    hora = {f: pd.Timestamp(min(it.datetime for it in its)).tz_convert("UTC").tz_localize(None) - pd.Timedelta(hours=5)
+            for f, its in fechas.items()}
+    # después: primero las tomas posteriores al último foco (la cicatriz completa), luego las del incendio
+    post = [f for f in despejado if hora[f] > ultimo and despejado[f] >= 0.30]
+    post += sorted([f for f in despejado if inicio < hora[f] <= ultimo and despejado[f] >= 0.30], reverse=True)
+    # antes: la toma más cercana previa al primer foco, hasta 60 días antes
+    pre = sorted([f for f in despejado if inicio - pd.Timedelta(days=60) <= hora[f] < inicio and despejado[f] >= 0.30], reverse=True)
     if not post:
         res = {"post": None, "pre": None}
         if cache is not None:
             _guardar_cache(cache, res, (o, s, e, n), shape)
         return res
-    f_post = post[-1]
-    img = escena(fechas[f_post], ["B04", "B03", "B02", "B8A", "B12", "SCL"], shape, transform)
-    res = {"post": str(f_post), "pre": None, "img_post": img}
+    # base: la primera muy despejada (≥ 80 %) en ese orden, o la más despejada; los huecos por nubes se
+    # completan con las siguientes tomas, píxel a píxel (selva: casi nunca hay una sola toma limpia)
+    base_post = next((f for f in post if despejado[f] >= 0.80), max(post, key=despejado.get))
+    img, usadas = componer(fechas, [base_post] + [f for f in post if f != base_post],
+                           ["B04", "B03", "B02", "B8A", "B12", "SCL"], shape, transform)
+    res = {"post": str(base_post), "pre": None, "img_post": img, "post_usadas": ",".join(map(str, usadas))}
     if pre:
-        f_pre = pre[-1]
-        res["pre"] = str(f_pre)
-        res["img_pre"] = escena(fechas[f_pre], ["B8A", "B12", "SCL"], shape, transform)
+        base_pre = next((f for f in pre if despejado[f] >= 0.80), max(pre, key=despejado.get))
+        img_pre, usadas = componer(fechas, [base_pre] + [f for f in pre if f != base_pre], ["B8A", "B12", "SCL"], shape, transform)
+        res["pre"] = str(base_pre)
+        res["img_pre"] = img_pre
+        res["pre_usadas"] = ",".join(map(str, usadas))
     if cache is not None:
         _guardar_cache(cache, res, (o, s, e, n), shape)
     return res
 
 
+def worldcover(o, s, e, n, shape, cache):
+    """ESA WorldCover 2021 (10 m) remuestreado a la grilla de la textura, por vecino más cercano."""
+    if cache.exists():
+        z = np.load(cache)
+        if np.allclose(z["caja"], (o, s, e, n)) and tuple(z["clase"].shape) == tuple(shape):
+            return z["clase"]
+    cat = pystac_client.Client.open(STAC, modifier=planetary_computer.sign_inplace)
+    items = list(cat.search(collections=["esa-worldcover"], bbox=[o, s, e, n]).items())
+    items = [it for it in items if "2021" in str(it.properties.get("esa_worldcover:product_version", "")) or
+             str(it.datetime or it.properties.get("start_datetime", ""))[:4] == "2021"] or items
+    clase = np.zeros(shape, np.uint8)
+    t = from_bounds(o, s, e, n, shape[1], shape[0])
+    for it in items:
+        dst = np.zeros(shape, np.uint8)
+        with rasterio.open(it.assets["map"].href) as src:
+            reproject(rasterio.band(src, 1), dst, dst_transform=t, dst_crs="EPSG:4326",
+                      resampling=Resampling.nearest, src_nodata=0, dst_nodata=0)
+        clase[clase == 0] = dst[clase == 0]
+    np.savez_compressed(cache, caja=np.array((o, s, e, n)), clase=clase)
+    return clase
+
+
 def area_quemada(dnbr, nbr_post, invalido, dist, px_ha):
     """Máscara del área quemada: zonas contiguas de píxeles quemados que contienen un núcleo junto a los focos."""
-    candidato = (dnbr >= DNBR_MIN) & (nbr_post <= NBR_POST_MAX) & ~invalido & (dist <= D_MAX_M)
+    nucleo = (dnbr >= DNBR_NUCLEO) & ~invalido & (dist <= R_NUCLEO_M)
+    candidato = (((dnbr >= DNBR_MIN) & (nbr_post <= NBR_POST_MAX)) | nucleo) & ~invalido & (dist <= D_MAX_M)
     candidato = ndi.binary_opening(candidato)
     etiquetas, _ = ndi.label(candidato, structure=np.ones((3, 3)))
-    nucleo = candidato & (dnbr >= DNBR_NUCLEO) & (dist <= R_NUCLEO_M)
+    nucleo &= candidato
     q = np.isin(etiquetas, np.setdiff1d(np.unique(etiquetas[nucleo]), [0]))
     q = ndi.binary_closing(q, iterations=2)
     # islas sin quemar de menos de 1 ha quedan dentro del área quemada
@@ -363,12 +443,18 @@ def procesar(ev_row, focos, corte):
         Image.fromarray(a_png_color(img["B12"], img["B8A"], img["B04"], 0.45)).save(
             OUT_IMG / f"{eid}_infrarrojo.jpg", quality=84)
         texturas += ["natural", "infrarrojo"]
-        info_s2 = {"post": s2["post"], "pre": s2["pre"]}
+        info_s2 = {"post": s2["post"], "pre": s2["pre"],
+                   "post_usadas": [x for x in s2.get("post_usadas", "").split(",") if x],
+                   "pre_usadas": [x for x in s2.get("pre_usadas", "").split(",") if x]}
         if s2.get("pre"):
             pre = s2["img_pre"]
-            nube = lambda scl: np.isin(scl, [0, 1, 3, 8, 9, 10])
+            nube = lambda scl: np.isin(scl, NUBE)
             dnbr = nbr(pre) - nbr(img)
             invalido = nube(pre["SCL"]) | nube(img["SCL"]) | (img["SCL"] == 6) | (pre["SCL"] == 6)
+            invalido |= (img["B8A"] <= 0) | (img["B12"] <= 0) | (pre["B8A"] <= 0) | (pre["B12"] <= 0)
+            # nieve y su borde (~60 m): al derretirse simula una caída del NBR (Chichas, entrega de Fabricio Luna)
+            px_m0 = (e - o) / dem_tex.shape[1] * 111320 * math.cos(math.radians(lat0))
+            invalido |= ndi.binary_dilation((img["SCL"] == 11) | (pre["SCL"] == 11), iterations=max(1, round(60 / px_m0)))
             LON, LAT = malla(o, s, e, n, dem_tex.shape[1])
             arbol = cKDTree(a_xy(det.lon.values, det.lat.values, lat0))
             dist = arbol.query(a_xy(LON.ravel(), LAT.ravel(), lat0))[0].reshape(LON.shape)
@@ -378,11 +464,27 @@ def procesar(ev_row, focos, corte):
             # severidad solo dentro del área quemada (las islas rellenadas cuentan como baja)
             clase = np.digitize(np.nan_to_num(dnbr, nan=0.0), [c[1] for c in CLASES_DNBR[:-1]])
             rgba = np.zeros(dem_tex.shape + (4,), np.uint8)
-            sev = {"pre": s2["pre"], "post": s2["post"], "clases": []}
+            sev = {"pre": s2["pre"], "post": s2["post"], "post_usadas": info_s2["post_usadas"], "clases": []}
             for i, (_, _, nombre, color) in enumerate(CLASES_DNBR):
                 rgba[q & (clase == i)] = color
                 sev["clases"].append({"clase": nombre, "ha": round(float((q & (clase == i)).sum() * px_ha), 0)})
             sev["total_ha"] = round(sum(c["ha"] for c in sev["clases"]), 0)
+            # sensibilidad: solo el área con dNBR ≥ 0.27 (lo que darían los métodos de un solo umbral)
+            sev["ha_027"] = round(float((q & (dnbr >= 0.27)).sum() * px_ha), 0)
+            # qué se quemó: cobertura ESA WorldCover 2021 a 10 m dentro del área quemada, por severidad
+            try:
+                wc = worldcover(o, s, e, n, dem_tex.shape, CACHE_S2 / f"{eid}_wc.npz")
+                cob = []
+                for cod, nombre in WORLDCOVER.items():
+                    m = q & (wc == cod)
+                    if m.sum() * px_ha >= 1:
+                        cob.append({"clase": nombre, "ha": round(float(m.sum() * px_ha), 0),
+                                    "por_severidad": [round(float((m & (clase == i)).sum() * px_ha), 0) for i in range(4)],
+                                    "pct_entorno": round(float((wc[dist <= 1500] == cod).mean() * 100), 1)})
+                sev["cobertura"] = sorted(cob, key=lambda c: -c["ha"])
+            except Exception as ex:
+                print("   WorldCover no disponible:", ex)
+                sev["cobertura"] = None
             sev["pct_sin_dato"] = round(float(invalido[dist <= 1500].mean() * 100), 0)
             # cuánto de lo detectado antes de la imagen (~10:30 h) cae en el área quemada (± medio píxel VIIRS)
             antes = (det.t_local < pd.Timestamp(s2["post"]) + pd.Timedelta(hours=10, minutes=30)).values
@@ -392,6 +494,9 @@ def procesar(ev_row, focos, corte):
             sev["focos_antes"] = int(antes.sum())
             sev["focos_antes_dentro_pct"] = round(float(dentro[antes].mean() * 100), 0) if antes.any() else None
             sev["focos_despues"] = int((~antes).sum())
+            # la imagen se tomó con el incendio activo: hay focos a ±12 h de la toma
+            t_img = pd.Timestamp(s2["post"]) + pd.Timedelta(hours=10, minutes=10)
+            sev["fuego_activo"] = bool((abs(det.t_local - t_img) <= pd.Timedelta(hours=12)).any())
             poli = a_poligono(q, o, s, e, n)
             sev["perimetro"] = redondear_geojson(mapping(poli)) if poli is not None else None
             if not antes.any():  # la imagen es anterior al primer foco: no puede mostrar este incendio

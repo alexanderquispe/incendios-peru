@@ -1,0 +1,111 @@
+{
+ "recopilado_por": "Ivette Mamani Flores",
+ "revisado": "2026-10-22",
+ "normas": [
+  {
+   "norma": "Plan Multisectorial ante Incendios Forestales 2025–2027",
+   "dispositivo": "D. S. 010-2025-PCM; actualizado por el D. S. 069-2026-PCM",
+   "entidad": "PCM",
+   "aprobada": "2025-01-21",
+   "actualizada": "2026-05-10",
+   "estado": "Vigente, actualizado",
+   "que_hace": "Coordina a los ministerios en los distritos priorizados por riesgo de incendio; la actualización de 2026 cambia esos distritos y fija metas e inversiones del año.",
+   "urls": [
+    "https://busquedas.elperuano.pe/dispositivo/NL/2363797-1",
+    "https://busquedas.elperuano.pe/dispositivo/NL/2513809-1"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Política Nacional de Gestión del Riesgo de Desastres al 2050",
+   "dispositivo": "D. S. 038-2021-PCM",
+   "entidad": "PCM",
+   "aprobada": "2021-03-01",
+   "actualizada": "2021-03-01",
+   "estado": "Vigente",
+   "que_hace": "Marco de todos los planes de gestión del riesgo, incluido el de incendios forestales.",
+   "urls": [
+    "https://dimse.cenepred.gob.pe/simse/cenepred/docs/DS_038_2021_PCM_POLITICA_NACIONAL_DEL_RIESGO_DESASTRES_AL_2050.pdf"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Plan Nacional de Gestión del Riesgo de Desastres (PLANAGERD) 2022–2030",
+   "dispositivo": "D. S. 115-2022-PCM",
+   "entidad": "PCM",
+   "aprobada": "2022-09-13",
+   "actualizada": "2022-09-13",
+   "estado": "Vigente",
+   "que_hace": "Lleva la política de riesgo a acciones multisectoriales; el plan de incendios se apoya en él.",
+   "urls": [
+    "https://busquedas.elperuano.pe/dispositivo/NL/2104793-1"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Plan de Prevención y Reducción de Riesgos de Incendios Forestales 2019–2022",
+   "dispositivo": "RDE 284-2018-MINAGRI-SERFOR-DE",
+   "entidad": "SERFOR",
+   "aprobada": "2018-12-17",
+   "actualizada": "2018-12-17",
+   "estado": "Vencido en 2022",
+   "que_hace": "Plan del sector forestal para prevenir incendios. No se encontró un plan que lo reemplace (por confirmar con SERFOR).",
+   "urls": [
+    "https://sinia.minam.gob.pe/sites/default/files/siar-puno/archivos/public/docs/plan-de-prevencion-y-reduccion-de-riesgos-de-incendios-forestales.pdf"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Ley Forestal y de Fauna Silvestre",
+   "dispositivo": "Ley 29763; modificada por la Ley 31973",
+   "entidad": "Congreso",
+   "aprobada": "2011-07",
+   "actualizada": "2024-01",
+   "estado": "Vigente",
+   "que_hace": "Regula el uso de los bosques; la Ley 31973 cambió la zonificación forestal.",
+   "urls": [
+    "https://sinia.minam.gob.pe/normas/ley-que-modifica-ley-29763-ley-forestal-fauna-silvestre-aprueba"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Política Nacional Forestal y de Fauna Silvestre",
+   "dispositivo": "D. S. 009-2013-MINAGRI",
+   "entidad": "MIDAGRI / SERFOR",
+   "aprobada": "2013",
+   "actualizada": "2013",
+   "estado": "Vigente; su versión al 2030 sigue como proyecto (RM 0010-2024-MIDAGRI)",
+   "que_hace": "Orienta la gestión de los bosques; es la base del plan de prevención del SERFOR.",
+   "urls": [
+    "https://busquedas.elperuano.pe/dispositivo/NL/2255312-1"
+   ],
+   "verificado": true
+  },
+  {
+   "norma": "Política Nacional Agraria 2021–2030",
+   "dispositivo": "D. S. 017-2021-MIDAGRI",
+   "entidad": "MIDAGRI",
+   "aprobada": "2021-07",
+   "actualizada": "2021-07",
+   "estado": "Vigente",
+   "que_hace": "Principal política del agro; importa porque la quema de residuos agrícolas y de pastos es la causa más común de los incendios.",
+   "urls": [
+    "https://leap.unep.org/en/countries/pe/national-legislation/decreto-supremo-no-017-2021-minagri-politica-nacional-agraria"
+   ],
+   "verificado": false
+  },
+  {
+   "norma": "Ley de prevención y lucha contra los incendios forestales",
+   "dispositivo": "Proyectos 3636, 6348, 6556 y otros",
+   "entidad": "Congreso",
+   "aprobada": "2025-09-10",
+   "actualizada": "2025-09-10",
+   "estado": "Dictamen aprobado en comisión; no publicada como ley",
+   "que_hace": "Propone reglas de prevención y respuesta y prohíbe cambiar el uso de tierras forestales quemadas.",
+   "urls": [
+    "https://comunicaciones.congreso.gob.pe/noticias/aprueban-dictamen-que-propone-una-ley-para-la-prevencion-y-lucha-contra-los-incendios-forestales/"
+   ],
+   "verificado": false
+  }
+ ]
+}
